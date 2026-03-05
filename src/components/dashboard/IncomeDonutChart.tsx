@@ -4,18 +4,18 @@ import { Transaction } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
 
 const COLORS = [
-  "hsl(210, 100%, 52%)", "hsl(160, 84%, 39%)", "hsl(0, 72%, 51%)",
-  "hsl(47, 100%, 50%)", "hsl(280, 65%, 60%)", "hsl(30, 100%, 50%)",
-  "hsl(190, 90%, 50%)", "hsl(340, 80%, 55%)",
+  "hsl(160, 84%, 39%)", "hsl(210, 100%, 52%)", "hsl(47, 100%, 50%)",
+  "hsl(280, 65%, 60%)", "hsl(30, 100%, 50%)", "hsl(190, 90%, 50%)",
+  "hsl(340, 80%, 55%)", "hsl(120, 60%, 45%)",
 ];
 
 interface Props {
   transactions: Transaction[];
 }
 
-export function ExpenseDonutChart({ transactions }: Props) {
-  const expenses = transactions.filter(t => t.type === "expense");
-  const grouped = expenses.reduce<Record<string, number>>((acc, t) => {
+export function IncomeDonutChart({ transactions }: Props) {
+  const incomes = transactions.filter(t => t.type === "income");
+  const grouped = incomes.reduce<Record<string, number>>((acc, t) => {
     acc[t.category] = (acc[t.category] || 0) + t.value;
     return acc;
   }, {});
@@ -27,7 +27,7 @@ export function ExpenseDonutChart({ transactions }: Props) {
   if (!data.length) {
     return (
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Expenses by Category</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">Income by Category</CardTitle></CardHeader>
         <CardContent className="flex h-[250px] items-center justify-center text-muted-foreground">No data</CardContent>
       </Card>
     );
@@ -35,7 +35,7 @@ export function ExpenseDonutChart({ transactions }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Expenses by Category</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">Income by Category</CardTitle></CardHeader>
       <CardContent>
         <div className="h-[250px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -45,7 +45,16 @@ export function ExpenseDonutChart({ transactions }: Props) {
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={{ backgroundColor: "hsl(224, 28%, 10%)", border: "1px solid hsl(220, 20%, 18%)", borderRadius: "8px", color: "hsl(210, 40%, 96%)" }} itemStyle={{ color: "hsl(210, 40%, 96%)" }} />
+              <Tooltip
+                formatter={(v: number) => formatCurrency(v)}
+                contentStyle={{
+                  backgroundColor: "hsl(224, 28%, 10%)",
+                  border: "1px solid hsl(220, 20%, 18%)",
+                  borderRadius: "8px",
+                  color: "hsl(210, 40%, 96%)",
+                }}
+                itemStyle={{ color: "hsl(210, 40%, 96%)" }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>

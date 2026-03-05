@@ -70,7 +70,7 @@ function downloadCSV(content: string, filename: string) {
 }
 
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 }
 
 export function getMonthName(month: number): string {

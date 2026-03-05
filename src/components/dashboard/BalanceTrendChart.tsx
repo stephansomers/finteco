@@ -27,7 +27,7 @@ export function BalanceTrendChart({ transactions, year }: Props) {
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
               <XAxis dataKey="month" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-              <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
+              <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
               <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={{ backgroundColor: "hsl(224, 28%, 10%)", border: "1px solid hsl(220, 20%, 18%)", borderRadius: "8px", color: "hsl(210, 40%, 96%)" }} />
               <Line type="monotone" dataKey="balance" stroke="hsl(210, 100%, 52%)" strokeWidth={2} dot={{ fill: "hsl(210, 100%, 52%)", r: 3 }} />
             </LineChart>

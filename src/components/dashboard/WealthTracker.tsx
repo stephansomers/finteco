@@ -93,7 +93,7 @@ export function WealthTracker({ assets }: Props) {
                 <LineChart data={wealthData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
                   <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   <Line type="monotone" dataKey="total" stroke="hsl(160, 84%, 39%)" strokeWidth={2} dot={{ r: 3 }} />
                 </LineChart>
@@ -110,7 +110,7 @@ export function WealthTracker({ assets }: Props) {
                 <AreaChart data={wealthData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
                   <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   {institutions.map((inst, i) => (
                     <Area key={inst} type="monotone" dataKey={inst} stackId="1" fill={COLORS[i % COLORS.length]} stroke={COLORS[i % COLORS.length]} fillOpacity={0.6} />
