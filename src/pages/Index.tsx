@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Upload, Download } from "lucide-react";
 import { Transaction, AssetSnapshot } from "@/lib/types";
 import { parseTransactionCSV, parseAssetCSV, downloadTransactionTemplate, downloadAssetTemplate } from "@/lib/csv-utils";
+import { MOCK_TRANSACTIONS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
+import { IncomeDonutChart } from "@/components/dashboard/IncomeDonutChart";
 import { BalanceTrendChart } from "@/components/dashboard/BalanceTrendChart";
 import { TransactionsTable } from "@/components/dashboard/TransactionsTable";
 import { YearlyConsolidated } from "@/components/dashboard/YearlyConsolidated";
@@ -14,13 +16,11 @@ import { WealthTracker } from "@/components/dashboard/WealthTracker";
 import { LoansTab } from "@/components/dashboard/LoansTab";
 
 const currentYear = new Date().getFullYear();
-const currentMonth = new Date().getMonth();
 
 const Index = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>([]);
   const [year, setYear] = useState(currentYear.toString());
-  const [month, setMonth] = useState(currentMonth.toString());
   const txFileRef = useRef<HTMLInputElement>(null);
   const assetFileRef = useRef<HTMLInputElement>(null);
 
@@ -30,20 +30,13 @@ const Index = () => {
     return all;
   }, [transactions]);
 
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December",
-  ];
+  const yearTx = useMemo(() =>
+    transactions.filter(t => new Date(t.date).getFullYear() === parseInt(year)),
+    [transactions, year]);
 
-  const filteredTx = useMemo(() =>
-    transactions.filter(t => {
-      const d = new Date(t.date);
-      return d.getFullYear() === parseInt(year) && d.getMonth() === parseInt(month);
-    }), [transactions, year, month]);
-
-  const revenue = filteredTx.filter(t => t.type === "income").reduce((s, t) => s + t.value, 0);
-  const expenses = filteredTx.filter(t => t.type === "expense").reduce((s, t) => s + t.value, 0);
-  const travel = filteredTx.filter(t => t.type === "expense" && t.category.toLowerCase() === "travel").reduce((s, t) => s + t.value, 0);
+  const revenue = yearTx.filter(t => t.type === "income").reduce((s, t) => s + t.value, 0);
+  const expenses = yearTx.filter(t => t.type === "expense").reduce((s, t) => s + t.value, 0);
+  const travel = yearTx.filter(t => t.type === "expense" && t.category.toLowerCase() === "travel").reduce((s, t) => s + t.value, 0);
   const balance = revenue - expenses;
 
   const handleTxUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,16 +82,6 @@ const Index = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Select value={month} onValueChange={setMonth}>
-              <SelectTrigger className="w-[130px] border-border/50 bg-secondary">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {months.map((m, i) => (
-                  <SelectItem key={i} value={i.toString()}>{m}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </div>
       </header>
@@ -126,13 +109,16 @@ const Index = () => {
 
             <KpiCards revenue={revenue} expenses={expenses} travel={travel} balance={balance} />
 
+            <YearlyConsolidated transactions={transactions} year={parseInt(year)} />
+
             <div className="grid gap-6 lg:grid-cols-2">
-              <ExpenseDonutChart transactions={filteredTx} />
-              <BalanceTrendChart transactions={transactions} year={parseInt(year)} />
+              <ExpenseDonutChart transactions={yearTx} />
+              <IncomeDonutChart transactions={yearTx} />
             </div>
 
-            <TransactionsTable transactions={filteredTx} />
-            <YearlyConsolidated transactions={transactions} year={parseInt(year)} />
+            <BalanceTrendChart transactions={transactions} year={parseInt(year)} />
+
+            <TransactionsTable transactions={transactions} year={parseInt(year)} />
           </TabsContent>
 
           <TabsContent value="wealth" className="space-y-6">

@@ -1,24 +1,40 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowUpDown } from "lucide-react";
 import { Transaction, SortField, SortDirection } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
+  year: number;
 }
 
-export function TransactionsTable({ transactions }: Props) {
+const months = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+export function TransactionsTable({ transactions, year }: Props) {
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
+  const [month, setMonth] = useState<string>("all");
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
     else { setSortField(field); setSortDir("desc"); }
   };
 
-  const sorted = [...transactions].sort((a, b) => {
+  const filtered = useMemo(() => {
+    let tx = transactions.filter(t => new Date(t.date).getFullYear() === year);
+    if (month !== "all") {
+      tx = tx.filter(t => new Date(t.date).getMonth() === parseInt(month));
+    }
+    return tx;
+  }, [transactions, year, month]);
+
+  const sorted = [...filtered].sort((a, b) => {
     const mul = sortDir === "asc" ? 1 : -1;
     if (sortField === "date") return mul * (new Date(a.date).getTime() - new Date(b.date).getTime());
     return mul * (a.value - b.value);
@@ -26,7 +42,20 @@ export function TransactionsTable({ transactions }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Transactions</CardTitle></CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-sm font-medium">Transactions</CardTitle>
+        <Select value={month} onValueChange={setMonth}>
+          <SelectTrigger className="w-[140px] border-border/50 bg-secondary">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Months</SelectItem>
+            {months.map((m, i) => (
+              <SelectItem key={i} value={i.toString()}>{m}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </CardHeader>
       <CardContent className="overflow-x-auto">
         <Table>
           <TableHeader>

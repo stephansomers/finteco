@@ -185,7 +185,7 @@ export function LoansTab({ transactions, year }: Props) {
                 <BarChart data={personData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
                   <XAxis dataKey="name" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   <Legend />
                   <Bar dataKey="lent" name="Lent" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} />
