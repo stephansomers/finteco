@@ -1,4 +1,4 @@
-import { Transaction, DividendEntry } from "./types";
+import { Transaction, DividendEntry, AssetSnapshot } from "./types";
 
 const currentYear = new Date().getFullYear();
 
@@ -94,4 +94,34 @@ export const MOCK_DIVIDENDS: DividendEntry[] = [
   { date: `${currentYear}-05-20`, asset: "XPML11", category: "FIIs", value: 200 },
   { date: `${currentYear}-05-20`, asset: "HGLG11", category: "FIIs", value: 230 },
   { date: `${currentYear}-05-20`, asset: "KNRI11", category: "FIIs", value: 165 },
+];
+
+export const MOCK_ASSETS: AssetSnapshot[] = [
+  // Bank A
+  { institution: "Nubank", date: `${currentYear}-01`, value: 45000 },
+  { institution: "Nubank", date: `${currentYear}-02`, value: 47200 },
+  { institution: "Nubank", date: `${currentYear}-03`, value: 46800 },
+  { institution: "Nubank", date: `${currentYear}-04`, value: 49500 },
+  { institution: "Nubank", date: `${currentYear}-05`, value: 51000 },
+
+  // Broker
+  { institution: "XP Investimentos", date: `${currentYear}-01`, value: 82000 },
+  { institution: "XP Investimentos", date: `${currentYear}-02`, value: 84500 },
+  { institution: "XP Investimentos", date: `${currentYear}-03`, value: 81200 },
+  { institution: "XP Investimentos", date: `${currentYear}-04`, value: 86000 },
+  { institution: "XP Investimentos", date: `${currentYear}-05`, value: 89300 },
+
+  // Another bank
+  { institution: "Inter", date: `${currentYear}-01`, value: 18000 },
+  { institution: "Inter", date: `${currentYear}-02`, value: 18500 },
+  { institution: "Inter", date: `${currentYear}-03`, value: 19200 },
+  { institution: "Inter", date: `${currentYear}-04`, value: 19800 },
+  { institution: "Inter", date: `${currentYear}-05`, value: 20100 },
+
+  // Crypto
+  { institution: "Binance", date: `${currentYear}-01`, value: 12000 },
+  { institution: "Binance", date: `${currentYear}-02`, value: 14800 },
+  { institution: "Binance", date: `${currentYear}-03`, value: 11500 },
+  { institution: "Binance", date: `${currentYear}-04`, value: 15200 },
+  { institution: "Binance", date: `${currentYear}-05`, value: 16800 },
 ];
