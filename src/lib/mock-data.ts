@@ -64,6 +64,60 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-05-20`, description: "Repayment from Rafael", category: "Loan Repayment", subcategory: "Repayment", type: "income", value: 1500 },
   { date: `${currentYear}-05-22`, description: "Gym membership", category: "Health", subcategory: "Gym", type: "expense", value: 150 },
   { date: `${currentYear}-05-25`, description: "Electronics", category: "Shopping", subcategory: "Electronics", type: "expense", value: 1200 },
+
+  // June
+  { date: `${currentYear}-06-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-06-07`, description: "Consulting project", category: "Income", subcategory: "Freelance", type: "income", value: 4200 },
+  { date: `${currentYear}-06-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-06-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 690 },
+  { date: `${currentYear}-06-15`, description: "Dining out", category: "Food", subcategory: "Dining Out", type: "expense", value: 300 },
+  { date: `${currentYear}-06-18`, description: "Fuel", category: "Transport", subcategory: "Fuel", type: "expense", value: 260 },
+  { date: `${currentYear}-06-22`, description: "Internet bill", category: "Housing", subcategory: "Utilities", type: "expense", value: 120 },
+  { date: `${currentYear}-06-25`, description: "Gym membership", category: "Health", subcategory: "Gym", type: "expense", value: 150 },
+
+  // July
+  { date: `${currentYear}-07-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-07-07`, description: "UX redesign project", category: "Income", subcategory: "Freelance", type: "income", value: 3800 },
+  { date: `${currentYear}-07-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-07-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 710 },
+  { date: `${currentYear}-07-15`, description: "Cinema", category: "Entertainment", subcategory: "Movies", type: "expense", value: 120 },
+  { date: `${currentYear}-07-18`, description: "Fuel", category: "Transport", subcategory: "Fuel", type: "expense", value: 240 },
+  { date: `${currentYear}-07-22`, description: "Electricity bill", category: "Housing", subcategory: "Utilities", type: "expense", value: 310 },
+
+  // August
+  { date: `${currentYear}-08-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-08-07`, description: "Shopify integration", category: "Income", subcategory: "Freelance", type: "income", value: 5200 },
+  { date: `${currentYear}-08-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-08-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 670 },
+  { date: `${currentYear}-08-18`, description: "Uber rides", category: "Transport", subcategory: "Rideshare", type: "expense", value: 210 },
+  { date: `${currentYear}-08-22`, description: "Restaurant", category: "Food", subcategory: "Dining Out", type: "expense", value: 350 },
+
+  // September
+  { date: `${currentYear}-09-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-09-09`, description: "Tech consulting", category: "Income", subcategory: "Freelance", type: "income", value: 4100 },
+  { date: `${currentYear}-09-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-09-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 690 },
+  { date: `${currentYear}-09-18`, description: "Fuel", category: "Transport", subcategory: "Fuel", type: "expense", value: 260 },
+
+  // October
+  { date: `${currentYear}-10-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-10-07`, description: "Freelance backend project", category: "Income", subcategory: "Freelance", type: "income", value: 4700 },
+  { date: `${currentYear}-10-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-10-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 720 },
+  { date: `${currentYear}-10-20`, description: "Concert tickets", category: "Entertainment", subcategory: "Events", type: "expense", value: 600 },
+
+  // November
+  { date: `${currentYear}-11-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-11-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-11-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 740 },
+  { date: `${currentYear}-11-20`, description: "Black Friday electronics", category: "Shopping", subcategory: "Electronics", type: "expense", value: 2400 },
+
+  // December
+  { date: `${currentYear}-12-05`, description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 12000 },
+  { date: `${currentYear}-12-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
+  { date: `${currentYear}-12-12`, description: "Christmas gifts", category: "Shopping", subcategory: "Gifts", type: "expense", value: 1500 },
+  { date: `${currentYear}-12-15`, description: "Year-end bonus", category: "Income", subcategory: "Bonus", type: "income", value: 15000 },
+  { date: `${currentYear}-12-20`, description: "New Year's travel", category: "Travel", subcategory: "Hotels", type: "expense", value: 1800 },
 ];
 
 export const MOCK_DIVIDENDS: DividendEntry[] = [
@@ -115,6 +169,38 @@ export const MOCK_DIVIDENDS: DividendEntry[] = [
   { date: `${currentYear}-05-20`, asset: "MXRF11", category: "FIIs", value: 135 },
   { date: `${currentYear}-05-25`, asset: "IVVB11", category: "ETFs", value: 130 },
   { date: `${currentYear}-05-25`, asset: "HASH11", category: "ETFs", value: 75 },
+
+  // June
+  { date: `${currentYear}-06-15`, asset: "PETR4", category: "Ações", value: 360 },
+  { date: `${currentYear}-06-15`, asset: "VALE3", category: "Ações", value: 470 },
+  { date: `${currentYear}-06-20`, asset: "XPML11", category: "FIIs", value: 205 },
+  { date: `${currentYear}-06-20`, asset: "HGLG11", category: "FIIs", value: 235 },
+
+  // July
+  { date: `${currentYear}-07-15`, asset: "PETR4", category: "Ações", value: 370 },
+  { date: `${currentYear}-07-15`, asset: "ITUB4", category: "Ações", value: 300 },
+  { date: `${currentYear}-07-20`, asset: "XPML11", category: "FIIs", value: 210 },
+
+  // August
+  { date: `${currentYear}-08-15`, asset: "VALE3", category: "Ações", value: 490 },
+  { date: `${currentYear}-08-20`, asset: "HGLG11", category: "FIIs", value: 240 },
+  { date: `${currentYear}-08-25`, asset: "IVVB11", category: "ETFs", value: 135 },
+
+  // September
+  { date: `${currentYear}-09-15`, asset: "PETR4", category: "Ações", value: 395 },
+  { date: `${currentYear}-09-20`, asset: "XPML11", category: "FIIs", value: 215 },
+
+  // October
+  { date: `${currentYear}-10-15`, asset: "VALE3", category: "Ações", value: 505 },
+  { date: `${currentYear}-10-20`, asset: "HGLG11", category: "FIIs", value: 245 },
+
+  // November
+  { date: `${currentYear}-11-15`, asset: "PETR4", category: "Ações", value: 410 },
+  { date: `${currentYear}-11-20`, asset: "XPML11", category: "FIIs", value: 220 },
+
+  // December
+  { date: `${currentYear}-12-15`, asset: "VALE3", category: "Ações", value: 530 },
+  { date: `${currentYear}-12-20`, asset: "HGLG11", category: "FIIs", value: 255 },
 ];
 
 export const MOCK_ASSETS: AssetSnapshot[] = [
@@ -124,6 +210,13 @@ export const MOCK_ASSETS: AssetSnapshot[] = [
   { institution: "Bank Alpha", date: `${currentYear}-03`, value: 46800 },
   { institution: "Bank Alpha", date: `${currentYear}-04`, value: 49500 },
   { institution: "Bank Alpha", date: `${currentYear}-05`, value: 51000 },
+  { institution: "Bank Alpha", date: `${currentYear}-06`, value: 52800 },
+  { institution: "Bank Alpha", date: `${currentYear}-07`, value: 54200 },
+  { institution: "Bank Alpha", date: `${currentYear}-08`, value: 56000 },
+  { institution: "Bank Alpha", date: `${currentYear}-09`, value: 57500 },
+  { institution: "Bank Alpha", date: `${currentYear}-10`, value: 59000 },
+  { institution: "Bank Alpha", date: `${currentYear}-11`, value: 61000 },
+  { institution: "Bank Alpha", date: `${currentYear}-12`, value: 64000 },
 
   // Broker
   { institution: "Broker Prime", date: `${currentYear}-01`, value: 82000 },
@@ -131,6 +224,13 @@ export const MOCK_ASSETS: AssetSnapshot[] = [
   { institution: "Broker Prime", date: `${currentYear}-03`, value: 81200 },
   { institution: "Broker Prime", date: `${currentYear}-04`, value: 86000 },
   { institution: "Broker Prime", date: `${currentYear}-05`, value: 89300 },
+  { institution: "Broker Prime", date: `${currentYear}-06`, value: 91000 },
+  { institution: "Broker Prime", date: `${currentYear}-07`, value: 92500 },
+  { institution: "Broker Prime", date: `${currentYear}-08`, value: 94800 },
+  { institution: "Broker Prime", date: `${currentYear}-09`, value: 97000 },
+  { institution: "Broker Prime", date: `${currentYear}-10`, value: 99500 },
+  { institution: "Broker Prime", date: `${currentYear}-11`, value: 101200 },
+  { institution: "Broker Prime", date: `${currentYear}-12`, value: 108000 },
 
   // Another bank
   { institution: "Bank Beta", date: `${currentYear}-01`, value: 18000 },
@@ -138,6 +238,13 @@ export const MOCK_ASSETS: AssetSnapshot[] = [
   { institution: "Bank Beta", date: `${currentYear}-03`, value: 19200 },
   { institution: "Bank Beta", date: `${currentYear}-04`, value: 19800 },
   { institution: "Bank Beta", date: `${currentYear}-05`, value: 20100 },
+  { institution: "Bank Beta", date: `${currentYear}-06`, value: 20800 },
+  { institution: "Bank Beta", date: `${currentYear}-07`, value: 21400 },
+  { institution: "Bank Beta", date: `${currentYear}-08`, value: 21900 },
+  { institution: "Bank Beta", date: `${currentYear}-09`, value: 22500 },
+  { institution: "Bank Beta", date: `${currentYear}-10`, value: 23100 },
+  { institution: "Bank Beta", date: `${currentYear}-11`, value: 23800 },
+  { institution: "Bank Beta", date: `${currentYear}-12`, value: 24500 },
 
   // Crypto
   { institution: "Crypto Exchange", date: `${currentYear}-01`, value: 12000 },
@@ -145,4 +252,11 @@ export const MOCK_ASSETS: AssetSnapshot[] = [
   { institution: "Crypto Exchange", date: `${currentYear}-03`, value: 11500 },
   { institution: "Crypto Exchange", date: `${currentYear}-04`, value: 15200 },
   { institution: "Crypto Exchange", date: `${currentYear}-05`, value: 16800 },
+  { institution: "Crypto Exchange", date: `${currentYear}-06`, value: 17400 },
+  { institution: "Crypto Exchange", date: `${currentYear}-07`, value: 18200 },
+  { institution: "Crypto Exchange", date: `${currentYear}-08`, value: 19500 },
+  { institution: "Crypto Exchange", date: `${currentYear}-09`, value: 18800 },
+  { institution: "Crypto Exchange", date: `${currentYear}-10`, value: 20500 },
+  { institution: "Crypto Exchange", date: `${currentYear}-11`, value: 21400 },
+  { institution: "Crypto Exchange", date: `${currentYear}-12`, value: 23000 },
 ];
