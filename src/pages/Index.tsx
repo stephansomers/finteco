@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Upload, Download } from "lucide-react";
 import { Transaction, AssetSnapshot, DividendEntry } from "@/lib/types";
-import { parseTransactionCSV, parseAssetCSV, downloadTransactionTemplate, downloadAssetTemplate } from "@/lib/csv-utils";
+import { parseTransactionCSV, parseAssetCSV, parseDividendCSV, downloadTransactionTemplate, downloadAssetTemplate, downloadDividendTemplate } from "@/lib/csv-utils";
 import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
@@ -21,10 +21,11 @@ const currentYear = new Date().getFullYear();
 const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>([]);
-  const [dividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
+  const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
   const [year, setYear] = useState(currentYear.toString());
   const txFileRef = useRef<HTMLInputElement>(null);
   const assetFileRef = useRef<HTMLInputElement>(null);
+  const divFileRef = useRef<HTMLInputElement>(null);
 
   const years = useMemo(() => {
     const txYears = transactions.map(t => new Date(t.date).getFullYear());
@@ -142,6 +143,25 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="dividends" className="space-y-6">
+            <div className="flex flex-wrap gap-2">
+              <input ref={divFileRef} type="file" accept=".csv" className="hidden" onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                  const parsed = parseDividendCSV(ev.target?.result as string);
+                  setDividends(prev => [...prev, ...parsed]);
+                };
+                reader.readAsText(file);
+                e.target.value = "";
+              }} />
+              <Button onClick={() => divFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
+                <Upload className="mr-2 h-4 w-4" /> Upload Dividends CSV
+              </Button>
+              <Button onClick={downloadDividendTemplate} variant="ghost" size="sm">
+                <Download className="mr-2 h-4 w-4" /> Template
+              </Button>
+            </div>
             <DividendsTab dividends={dividends} year={parseInt(year)} />
           </TabsContent>
         </Tabs>
