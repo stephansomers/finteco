@@ -59,6 +59,25 @@ export function downloadAssetTemplate() {
   downloadCSV(csv, "assets_template.csv");
 }
 
+export function parseDividendCSV(text: string): DividendEntry[] {
+  const lines = text.trim().split("\n");
+  if (lines.length < 2) return [];
+  return lines.slice(1).map(line => {
+    const cols = parseCSVLine(line);
+    return {
+      date: cols[0]?.trim() || "",
+      asset: cols[1]?.trim() || "",
+      category: cols[2]?.trim() || "",
+      value: Math.abs(parseFloat(cols[3]?.trim() || "0")),
+    };
+  }).filter(d => d.date && d.asset && !isNaN(d.value));
+}
+
+export function downloadDividendTemplate() {
+  const csv = "date,asset,category,value\n2025-01-15,PETR4,Stocks,320\n2025-02-20,XPML11,FIIs,180\n2025-03-15,VALE3,Stocks,450";
+  downloadCSV(csv, "dividends_template.csv");
+}
+
 function downloadCSV(content: string, filename: string) {
   const blob = new Blob([content], { type: "text/csv" });
   const url = URL.createObjectURL(blob);

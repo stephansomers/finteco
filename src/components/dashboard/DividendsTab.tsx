@@ -102,7 +102,7 @@ export function DividendsTab({ dividends, year }: Props) {
                 <XAxis dataKey="month" stroke="hsl(215, 20%, 55%)" fontSize={12} />
                 <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(1)}k`} />
                 <Tooltip
-                  formatter={(v: number, name: string) => [formatCurrency(v), name === "cumulative" ? "Cumulative" : "Monthly"]}
+                  formatter={(v: number, name: string) => [formatCurrency(v), name === "cumulative" ? "Total" : "Monthly"]}
                   contentStyle={tooltipStyle}
                 />
                 <Line type="monotone" dataKey="value" name="Monthly" stroke="hsl(210, 100%, 52%)" strokeWidth={2} dot={{ r: 4 }} />
