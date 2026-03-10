@@ -1,4 +1,4 @@
-import { Transaction, AssetSnapshot } from "./types";
+import { Transaction, AssetSnapshot, DividendEntry } from "./types";
 
 export function parseTransactionCSV(text: string): Transaction[] {
   const lines = text.trim().split("\n");
