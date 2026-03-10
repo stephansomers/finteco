@@ -21,10 +21,11 @@ const currentYear = new Date().getFullYear();
 const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>([]);
-  const [dividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
+  const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
   const [year, setYear] = useState(currentYear.toString());
   const txFileRef = useRef<HTMLInputElement>(null);
   const assetFileRef = useRef<HTMLInputElement>(null);
+  const divFileRef = useRef<HTMLInputElement>(null);
 
   const years = useMemo(() => {
     const txYears = transactions.map(t => new Date(t.date).getFullYear());
