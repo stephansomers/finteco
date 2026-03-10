@@ -1,4 +1,4 @@
-import { Transaction, DividendEntry } from "./types";
+import { Transaction, DividendEntry, AssetSnapshot } from "./types";
 
 const currentYear = new Date().getFullYear();
 
