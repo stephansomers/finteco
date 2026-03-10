@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, Download } from "lucide-react";
 import { Transaction, AssetSnapshot, DividendEntry } from "@/lib/types";
 import { parseTransactionCSV, parseAssetCSV, parseDividendCSV, downloadTransactionTemplate, downloadAssetTemplate, downloadDividendTemplate } from "@/lib/csv-utils";
-import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS } from "@/lib/mock-data";
+import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS, MOCK_ASSETS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
 import { IncomeDonutChart } from "@/components/dashboard/IncomeDonutChart";
