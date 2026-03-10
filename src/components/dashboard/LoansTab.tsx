@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Transaction } from "@/lib/types";
-import { formatCurrency, getMonthName } from "@/lib/csv-utils";
+import { formatCurrency, formatNumber, getMonthName } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
@@ -115,12 +115,12 @@ export function LoansTab({ transactions, year }: Props) {
                       const v = getMonthlyValue(cat, i);
                       return (
                         <TableCell key={i} className={`text-right ${v > 0 ? "text-chart-income" : v < 0 ? "text-chart-expense" : "text-muted-foreground"}`}>
-                          {v !== 0 ? formatCurrency(Math.abs(v)) : "—"}
+                          {v !== 0 ? formatNumber(Math.abs(v)) : "—"}
                         </TableCell>
                       );
                     })}
                     <TableCell className={`text-right font-bold ${yearTotal > 0 ? "text-chart-income" : yearTotal < 0 ? "text-chart-expense" : ""}`}>
-                      {formatCurrency(Math.abs(yearTotal))}
+                      {formatNumber(Math.abs(yearTotal))}
                     </TableCell>
                   </TableRow>
                 );
@@ -132,12 +132,12 @@ export function LoansTab({ transactions, year }: Props) {
                   const total = categories.reduce((s, cat) => s + getMonthlyValue(cat, i), 0);
                   return (
                     <TableCell key={i} className={`text-right font-bold ${total > 0 ? "text-chart-income" : total < 0 ? "text-chart-expense" : ""}`}>
-                      {total !== 0 ? formatCurrency(Math.abs(total)) : "—"}
+                      {total !== 0 ? formatNumber(Math.abs(total)) : "—"}
                     </TableCell>
                   );
                 })}
                 <TableCell className={`text-right font-bold ${outstanding >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
-                  {formatCurrency(Math.abs(categories.reduce((s, cat) => s + Array.from({ length: 12 }, (_, i) => getMonthlyValue(cat, i)).reduce((a, b) => a + b, 0), 0)))}
+                  {formatNumber(Math.abs(categories.reduce((s, cat) => s + Array.from({ length: 12 }, (_, i) => getMonthlyValue(cat, i)).reduce((a, b) => a + b, 0), 0)))}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -148,30 +148,41 @@ export function LoansTab({ transactions, year }: Props) {
       {/* Person Consolidation & Chart */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">By Person</CardTitle></CardHeader>
-          <CardContent>
+          <CardHeader><CardTitle className="text-sm font-medium">Consolidated by Person</CardTitle></CardHeader>
+          <CardContent className="p-0">
             <Table>
               <TableHeader>
                 <TableRow className="border-border/50">
-                  <TableHead>Person</TableHead>
+                  <TableHead className="pl-6">Person</TableHead>
                   <TableHead className="text-right">Lent</TableHead>
                   <TableHead className="text-right">Repaid</TableHead>
-                  <TableHead className="text-right">Balance</TableHead>
+                  <TableHead className="text-right pr-6">Balance</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {personData.length === 0 ? (
-                  <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No data</TableCell></TableRow>
-                ) : personData.map(p => (
-                  <TableRow key={p.name} className="border-border/50">
-                    <TableCell className="font-medium">{p.name}</TableCell>
+                  <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No loan data</TableCell></TableRow>
+                ) : personData.map((p, idx) => (
+                  <TableRow key={p.name} className={`border-border/50 ${idx % 2 === 0 ? "bg-secondary/20" : ""}`}>
+                    <TableCell className="pl-6 font-medium">{p.name}</TableCell>
                     <TableCell className="text-right text-chart-expense">{formatCurrency(p.lent)}</TableCell>
                     <TableCell className="text-right text-chart-income">{formatCurrency(p.repaid)}</TableCell>
-                    <TableCell className={`text-right font-bold ${p.balance >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
-                      {formatCurrency(Math.abs(p.balance))}
+                    <TableCell className={`text-right pr-6 font-bold ${p.balance >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
+                      {p.balance >= 0 ? "+" : "-"}{formatCurrency(Math.abs(p.balance))}
                     </TableCell>
                   </TableRow>
                 ))}
+                {/* Totals row */}
+                {personData.length > 0 && (
+                  <TableRow className="border-border/50 bg-secondary/50">
+                    <TableCell className="pl-6 font-bold">Total</TableCell>
+                    <TableCell className="text-right font-bold text-chart-expense">{formatCurrency(totalLent)}</TableCell>
+                    <TableCell className="text-right font-bold text-chart-income">{formatCurrency(totalRepaid)}</TableCell>
+                    <TableCell className={`text-right pr-6 font-bold ${outstanding >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
+                      {outstanding >= 0 ? "+" : "-"}{formatCurrency(Math.abs(outstanding))}
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>
@@ -185,7 +196,7 @@ export function LoansTab({ transactions, year }: Props) {
                 <BarChart data={personData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
                   <XAxis dataKey="name" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   <Legend />
                   <Bar dataKey="lent" name="Lent" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} />

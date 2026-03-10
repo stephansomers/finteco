@@ -1,4 +1,4 @@
-import { Transaction } from "./types";
+import { Transaction, DividendEntry } from "./types";
 
 const currentYear = new Date().getFullYear();
 
@@ -57,4 +57,41 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-05-20`, description: "Repayment from Louise", category: "Loan Repayment", subcategory: "Repayment", type: "income", value: 1500 },
   { date: `${currentYear}-05-22`, description: "Gym membership", category: "Health", subcategory: "Gym", type: "expense", value: 150 },
   { date: `${currentYear}-05-25`, description: "Electronics", category: "Shopping", subcategory: "Electronics", type: "expense", value: 1200 },
+];
+
+export const MOCK_DIVIDENDS: DividendEntry[] = [
+  // January
+  { date: `${currentYear}-01-15`, asset: "PETR4", category: "Stocks", value: 320 },
+  { date: `${currentYear}-01-15`, asset: "VALE3", category: "Stocks", value: 450 },
+  { date: `${currentYear}-01-20`, asset: "XPML11", category: "FIIs", value: 180 },
+  { date: `${currentYear}-01-20`, asset: "HGLG11", category: "FIIs", value: 210 },
+
+  // February
+  { date: `${currentYear}-02-15`, asset: "PETR4", category: "Stocks", value: 340 },
+  { date: `${currentYear}-02-15`, asset: "ITUB4", category: "Stocks", value: 280 },
+  { date: `${currentYear}-02-20`, asset: "XPML11", category: "FIIs", value: 185 },
+  { date: `${currentYear}-02-20`, asset: "HGLG11", category: "FIIs", value: 215 },
+  { date: `${currentYear}-02-25`, asset: "KNRI11", category: "FIIs", value: 150 },
+
+  // March
+  { date: `${currentYear}-03-15`, asset: "PETR4", category: "Stocks", value: 380 },
+  { date: `${currentYear}-03-15`, asset: "VALE3", category: "Stocks", value: 520 },
+  { date: `${currentYear}-03-15`, asset: "ITUB4", category: "Stocks", value: 290 },
+  { date: `${currentYear}-03-20`, asset: "XPML11", category: "FIIs", value: 190 },
+  { date: `${currentYear}-03-20`, asset: "HGLG11", category: "FIIs", value: 220 },
+
+  // April
+  { date: `${currentYear}-04-15`, asset: "PETR4", category: "Stocks", value: 350 },
+  { date: `${currentYear}-04-15`, asset: "VALE3", category: "Stocks", value: 480 },
+  { date: `${currentYear}-04-20`, asset: "XPML11", category: "FIIs", value: 195 },
+  { date: `${currentYear}-04-20`, asset: "HGLG11", category: "FIIs", value: 225 },
+  { date: `${currentYear}-04-20`, asset: "KNRI11", category: "FIIs", value: 160 },
+
+  // May
+  { date: `${currentYear}-05-15`, asset: "PETR4", category: "Stocks", value: 400 },
+  { date: `${currentYear}-05-15`, asset: "VALE3", category: "Stocks", value: 510 },
+  { date: `${currentYear}-05-15`, asset: "ITUB4", category: "Stocks", value: 310 },
+  { date: `${currentYear}-05-20`, asset: "XPML11", category: "FIIs", value: 200 },
+  { date: `${currentYear}-05-20`, asset: "HGLG11", category: "FIIs", value: 230 },
+  { date: `${currentYear}-05-20`, asset: "KNRI11", category: "FIIs", value: 165 },
 ];

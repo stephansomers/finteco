@@ -13,5 +13,12 @@ export interface AssetSnapshot {
   value: number;
 }
 
+export interface DividendEntry {
+  date: string;
+  asset: string;
+  category: string;
+  value: number;
+}
+
 export type SortField = "date" | "value";
 export type SortDirection = "asc" | "desc";
