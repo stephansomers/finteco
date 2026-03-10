@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { DividendEntry } from "@/lib/types";
 import { formatCurrency, getMonthName } from "@/lib/csv-utils";
@@ -16,16 +17,23 @@ interface Props {
 }
 
 export function DividendsTab({ dividends, year }: Props) {
-  const yearDividends = useMemo(() =>
-    dividends.filter(d => new Date(d.date).getFullYear() === year),
-    [dividends, year]);
+  const [divYear, setDivYear] = useState<string>(year.toString());
 
-  const totalDividends = yearDividends.reduce((s, d) => s + d.value, 0);
+  const divYears = useMemo(() => {
+    const yrs = [...new Set(dividends.map(d => new Date(d.date).getFullYear()))].sort((a, b) => b - a);
+    return yrs;
+  }, [dividends]);
 
-  // Monthly growth data
+  const filteredDividends = useMemo(() => {
+    if (divYear === "all") return dividends;
+    return dividends.filter(d => new Date(d.date).getFullYear() === parseInt(divYear));
+  }, [dividends, divYear]);
+
+  const totalDividends = filteredDividends.reduce((s, d) => s + d.value, 0);
+
   const growthData = useMemo(() => {
     const monthly: Record<number, number> = {};
-    yearDividends.forEach(d => {
+    filteredDividends.forEach(d => {
       const month = new Date(d.date).getMonth();
       monthly[month] = (monthly[month] || 0) + d.value;
     });
@@ -34,29 +42,27 @@ export function DividendsTab({ dividends, year }: Props) {
       cumulative += monthly[i] || 0;
       return { month: getMonthName(i), value: monthly[i] || 0, cumulative };
     }).filter(d => d.cumulative > 0 || d.value > 0);
-  }, [yearDividends]);
+  }, [filteredDividends]);
 
-  // Allocation by asset
   const allocationByAsset = useMemo(() => {
     const map: Record<string, number> = {};
-    yearDividends.forEach(d => {
+    filteredDividends.forEach(d => {
       map[d.asset] = (map[d.asset] || 0) + d.value;
     });
     return Object.entries(map)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  }, [yearDividends]);
+  }, [filteredDividends]);
 
-  // Allocation by category
   const allocationByCategory = useMemo(() => {
     const map: Record<string, number> = {};
-    yearDividends.forEach(d => {
+    filteredDividends.forEach(d => {
       map[d.category] = (map[d.category] || 0) + d.value;
     });
     return Object.entries(map)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
-  }, [yearDividends]);
+  }, [filteredDividends]);
 
   const tooltipStyle = {
     backgroundColor: "hsl(224, 28%, 10%)",
@@ -65,13 +71,30 @@ export function DividendsTab({ dividends, year }: Props) {
     color: "hsl(210, 40%, 96%)",
   };
 
+  const selectedLabel = divYear === "all" ? "All Years" : divYear;
+
   return (
     <div className="space-y-6">
+      {/* Year Filter */}
+      <div className="flex items-center gap-2">
+        <Select value={divYear} onValueChange={setDivYear}>
+          <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Years</SelectItem>
+            {divYears.map(y => (
+              <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* KPI */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card className="border-border/50 bg-card">
           <CardContent className="p-5">
-            <p className="text-sm text-muted-foreground">Total Dividends ({year})</p>
+            <p className="text-sm text-muted-foreground">Total Dividends ({selectedLabel})</p>
             <p className="text-2xl font-bold text-chart-income">{formatCurrency(totalDividends)}</p>
           </CardContent>
         </Card>
@@ -93,7 +116,7 @@ export function DividendsTab({ dividends, year }: Props) {
 
       {/* Dividend Growth Chart */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Dividend Growth — {year}</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">Dividend Growth — {selectedLabel}</CardTitle></CardHeader>
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -116,7 +139,7 @@ export function DividendsTab({ dividends, year }: Props) {
       {/* Allocation Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Allocation by Asset</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm font-medium">Dividends by Asset</CardTitle></CardHeader>
           <CardContent>
             {allocationByAsset.length === 0 ? (
               <div className="flex h-[250px] items-center justify-center text-muted-foreground">No data</div>
@@ -148,7 +171,7 @@ export function DividendsTab({ dividends, year }: Props) {
         </Card>
 
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Allocation by Category</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm font-medium">Dividends per Category</CardTitle></CardHeader>
           <CardContent>
             {allocationByCategory.length === 0 ? (
               <div className="flex h-[250px] items-center justify-center text-muted-foreground">No data</div>

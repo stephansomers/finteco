@@ -10,16 +10,16 @@ interface Props {
 }
 
 export function YearlyConsolidated({ transactions, year }: Props) {
-  const yearExpenses = transactions.filter(
-    t => t.type === "expense" && new Date(t.date).getFullYear() === year
+  const yearTx = transactions.filter(
+    t => new Date(t.date).getFullYear() === year
   );
 
-  const subcategories = [...new Set(yearExpenses.map(t => t.subcategory))].sort();
+  const subcategories = [...new Set(yearTx.map(t => t.subcategory))].sort();
 
   const getData = (sub: string, month: number) =>
-    yearExpenses
+    yearTx
       .filter(t => t.subcategory === sub && new Date(t.date).getMonth() === month)
-      .reduce((s, t) => s + t.value, 0);
+      .reduce((s, t) => s + (t.type === "income" ? t.value : -t.value), 0);
 
   return (
     <Card className="border-border/50 bg-card">
@@ -27,7 +27,7 @@ export function YearlyConsolidated({ transactions, year }: Props) {
       <CardContent>
         <Accordion type="single" collapsible>
           <AccordionItem value="consolidated" className="border-border/50">
-            <AccordionTrigger className="text-sm">View Expense Breakdown by Subcategory</AccordionTrigger>
+            <AccordionTrigger className="text-sm">View Breakdown by Subcategory</AccordionTrigger>
             <AccordionContent className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -41,15 +41,19 @@ export function YearlyConsolidated({ transactions, year }: Props) {
                 </TableHeader>
                 <TableBody>
                   {subcategories.map(sub => {
-                    const total = Array.from({ length: 12 }, (_, i) => getData(sub, i)).reduce((a, b) => a + b, 0);
+                    const values = Array.from({ length: 12 }, (_, i) => getData(sub, i));
+                    const total = values.reduce((a, b) => a + b, 0);
                     return (
                       <TableRow key={sub} className="border-border/50">
                         <TableCell className="sticky left-0 bg-card font-medium">{sub}</TableCell>
-                        {Array.from({ length: 12 }, (_, i) => {
-                          const v = getData(sub, i);
-                          return <TableCell key={i} className="text-right text-muted-foreground">{v > 0 ? formatNumber(v) : "—"}</TableCell>;
-                        })}
-                        <TableCell className="text-right font-bold text-chart-expense">{formatNumber(total)}</TableCell>
+                        {values.map((v, i) => (
+                          <TableCell key={i} className={`text-right ${v > 0 ? "text-chart-income" : v < 0 ? "text-chart-expense" : "text-muted-foreground"}`}>
+                            {v !== 0 ? formatNumber(Math.abs(v)) : "—"}
+                          </TableCell>
+                        ))}
+                        <TableCell className={`text-right font-bold ${total > 0 ? "text-chart-income" : total < 0 ? "text-chart-expense" : ""}`}>
+                          {formatNumber(Math.abs(total))}
+                        </TableCell>
                       </TableRow>
                     );
                   })}

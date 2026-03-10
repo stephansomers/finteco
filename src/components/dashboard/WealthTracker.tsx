@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
+import { ChevronDown } from "lucide-react";
 import { AssetSnapshot } from "@/lib/types";
 import { formatCurrency, formatNumber } from "@/lib/csv-utils";
 
@@ -14,6 +17,7 @@ interface Props {
 }
 
 export function WealthTracker({ assets }: Props) {
+  const [tableOpen, setTableOpen] = useState(true);
   const institutions = [...new Set(assets.map(a => a.institution))];
   const periods = [...new Set(assets.map(a => a.date))].sort();
 
@@ -44,44 +48,51 @@ export function WealthTracker({ assets }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Assets Table */}
+      {/* Assets Table - Collapsible, no scroll */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Assets by Institution</CardTitle></CardHeader>
-        <CardContent className="overflow-x-auto">
-          <div style={{ maxHeight: `${Math.min(400, 56 + institutions.length * 56)}px` }} className="overflow-y-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-border/50">
-                  <TableHead className="sticky left-0 bg-card">Institution</TableHead>
-                  {periods.map(p => (
-                    <TableHead key={p} className="text-right">{p}</TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {institutions.map(inst => (
-                  <TableRow key={inst} className="border-border/50">
-                    <TableCell className="sticky left-0 bg-card font-medium">{inst}</TableCell>
-                    {periods.map((p, pi) => {
-                      const val = getValue(inst, p);
-                      const variation = getVariation(inst, pi);
-                      return (
-                        <TableCell key={p} className="text-right">
-                          <div>{val !== null ? formatNumber(val) : "—"}</div>
-                          {variation !== null && (
-                            <div className={`text-xs ${variation >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
-                              {variation >= 0 ? "+" : ""}{variation.toFixed(1)}%
-                            </div>
-                          )}
-                        </TableCell>
-                      );
-                    })}
+        <Collapsible open={tableOpen} onOpenChange={setTableOpen}>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-medium">Assets by Institution</CardTitle>
+            <CollapsibleTrigger className="rounded-md p-1 hover:bg-secondary">
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${tableOpen ? "rotate-180" : ""}`} />
+            </CollapsibleTrigger>
+          </CardHeader>
+          <CollapsibleContent>
+            <CardContent className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-border/50">
+                    <TableHead className="sticky left-0 bg-card">Institution</TableHead>
+                    {periods.map(p => (
+                      <TableHead key={p} className="text-right">{p}</TableHead>
+                    ))}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
+                </TableHeader>
+                <TableBody>
+                  {institutions.map(inst => (
+                    <TableRow key={inst} className="border-border/50">
+                      <TableCell className="sticky left-0 bg-card font-medium">{inst}</TableCell>
+                      {periods.map((p, pi) => {
+                        const val = getValue(inst, p);
+                        const variation = getVariation(inst, pi);
+                        return (
+                          <TableCell key={p} className="text-right">
+                            <div>{val !== null ? formatNumber(val) : "—"}</div>
+                            {variation !== null && (
+                              <div className={`text-xs ${variation >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
+                                {variation >= 0 ? "+" : ""}{variation.toFixed(1)}%
+                              </div>
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
       </Card>
 
       {/* Charts */}

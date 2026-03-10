@@ -3,13 +3,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowUpDown } from "lucide-react";
-import { Transaction, SortField, SortDirection } from "@/lib/types";
+import { Transaction } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
   year: number;
 }
+
+type SortField = "date" | "value" | "description" | "category" | "subcategory";
+type SortDirection = "asc" | "desc";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -37,8 +40,15 @@ export function TransactionsTable({ transactions, year }: Props) {
   const sorted = [...filtered].sort((a, b) => {
     const mul = sortDir === "asc" ? 1 : -1;
     if (sortField === "date") return mul * (new Date(a.date).getTime() - new Date(b.date).getTime());
-    return mul * (a.value - b.value);
+    if (sortField === "value") return mul * (a.value - b.value);
+    return mul * ((a[sortField] || "").localeCompare(b[sortField] || ""));
   });
+
+  const SortHeader = ({ field, children, className }: { field: SortField; children: React.ReactNode; className?: string }) => (
+    <TableHead className={`cursor-pointer select-none ${className || ""}`} onClick={() => toggleSort(field)}>
+      {children} <ArrowUpDown className="ml-1 inline h-3 w-3" />
+    </TableHead>
+  );
 
   return (
     <Card className="border-border/50 bg-card">
@@ -60,15 +70,11 @@ export function TransactionsTable({ transactions, year }: Props) {
         <Table>
           <TableHeader>
             <TableRow className="border-border/50">
-              <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("date")}>
-                Date <ArrowUpDown className="ml-1 inline h-3 w-3" />
-              </TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Subcategory</TableHead>
-              <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("value")}>
-                Value <ArrowUpDown className="ml-1 inline h-3 w-3" />
-              </TableHead>
+              <SortHeader field="date">Date</SortHeader>
+              <SortHeader field="description">Description</SortHeader>
+              <SortHeader field="category">Category</SortHeader>
+              <SortHeader field="subcategory">Subcategory</SortHeader>
+              <SortHeader field="value" className="text-right">Value</SortHeader>
             </TableRow>
           </TableHeader>
           <TableBody>
