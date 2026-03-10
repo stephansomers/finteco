@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Upload, Download } from "lucide-react";
 import { Transaction, AssetSnapshot, DividendEntry } from "@/lib/types";
-import { parseTransactionCSV, parseAssetCSV, downloadTransactionTemplate, downloadAssetTemplate } from "@/lib/csv-utils";
+import { parseTransactionCSV, parseAssetCSV, parseDividendCSV, downloadTransactionTemplate, downloadAssetTemplate, downloadDividendTemplate } from "@/lib/csv-utils";
 import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
