@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 import { AssetSnapshot } from "@/lib/types";
-import { formatCurrency } from "@/lib/csv-utils";
+import { formatCurrency, formatNumber } from "@/lib/csv-utils";
 
 const COLORS = [
   "hsl(210, 100%, 52%)", "hsl(160, 84%, 39%)", "hsl(47, 100%, 50%)",
@@ -28,7 +28,6 @@ export function WealthTracker({ assets }: Props) {
     return ((curr - prev) / prev) * 100;
   };
 
-  // Total wealth over time
   const wealthData = periods.map(p => {
     const total = institutions.reduce((s, inst) => s + (getValue(inst, p) ?? 0), 0);
     const entry: Record<string, any> = { period: p, total };
@@ -49,37 +48,39 @@ export function WealthTracker({ assets }: Props) {
       <Card className="border-border/50 bg-card">
         <CardHeader><CardTitle className="text-sm font-medium">Assets by Institution</CardTitle></CardHeader>
         <CardContent className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-border/50">
-                <TableHead className="sticky left-0 bg-card">Institution</TableHead>
-                {periods.map(p => (
-                  <TableHead key={p} className="text-right">{p}</TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {institutions.map(inst => (
-                <TableRow key={inst} className="border-border/50">
-                  <TableCell className="sticky left-0 bg-card font-medium">{inst}</TableCell>
-                  {periods.map((p, pi) => {
-                    const val = getValue(inst, p);
-                    const variation = getVariation(inst, pi);
-                    return (
-                      <TableCell key={p} className="text-right">
-                        <div>{val !== null ? formatCurrency(val) : "—"}</div>
-                        {variation !== null && (
-                          <div className={`text-xs ${variation >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
-                            {variation >= 0 ? "+" : ""}{variation.toFixed(1)}%
-                          </div>
-                        )}
-                      </TableCell>
-                    );
-                  })}
+          <div style={{ maxHeight: `${Math.min(400, 56 + institutions.length * 56)}px` }} className="overflow-y-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border/50">
+                  <TableHead className="sticky left-0 bg-card">Institution</TableHead>
+                  {periods.map(p => (
+                    <TableHead key={p} className="text-right">{p}</TableHead>
+                  ))}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {institutions.map(inst => (
+                  <TableRow key={inst} className="border-border/50">
+                    <TableCell className="sticky left-0 bg-card font-medium">{inst}</TableCell>
+                    {periods.map((p, pi) => {
+                      const val = getValue(inst, p);
+                      const variation = getVariation(inst, pi);
+                      return (
+                        <TableCell key={p} className="text-right">
+                          <div>{val !== null ? formatNumber(val) : "—"}</div>
+                          {variation !== null && (
+                            <div className={`text-xs ${variation >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
+                              {variation >= 0 ? "+" : ""}{variation.toFixed(1)}%
+                            </div>
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -93,7 +94,7 @@ export function WealthTracker({ assets }: Props) {
                 <LineChart data={wealthData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
                   <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   <Line type="monotone" dataKey="total" stroke="hsl(160, 84%, 39%)" strokeWidth={2} dot={{ r: 3 }} />
                 </LineChart>
@@ -110,7 +111,7 @@ export function WealthTracker({ assets }: Props) {
                 <AreaChart data={wealthData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
                   <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `R$${(v / 1000).toFixed(0)}k`} />
+                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   {institutions.map((inst, i) => (
                     <Area key={inst} type="monotone" dataKey={inst} stackId="1" fill={COLORS[i % COLORS.length]} stroke={COLORS[i % COLORS.length]} fillOpacity={0.6} />

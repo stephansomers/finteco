@@ -2,7 +2,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/lib/types";
-import { formatCurrency, getMonthName } from "@/lib/csv-utils";
+import { formatNumber, getMonthName } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
@@ -47,9 +47,9 @@ export function YearlyConsolidated({ transactions, year }: Props) {
                         <TableCell className="sticky left-0 bg-card font-medium">{sub}</TableCell>
                         {Array.from({ length: 12 }, (_, i) => {
                           const v = getData(sub, i);
-                          return <TableCell key={i} className="text-right text-muted-foreground">{v > 0 ? formatCurrency(v) : "—"}</TableCell>;
+                          return <TableCell key={i} className="text-right text-muted-foreground">{v > 0 ? formatNumber(v) : "—"}</TableCell>;
                         })}
-                        <TableCell className="text-right font-bold text-chart-expense">{formatCurrency(total)}</TableCell>
+                        <TableCell className="text-right font-bold text-chart-expense">{formatNumber(total)}</TableCell>
                       </TableRow>
                     );
                   })}

@@ -3,9 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Upload, Download } from "lucide-react";
-import { Transaction, AssetSnapshot } from "@/lib/types";
+import { Transaction, AssetSnapshot, DividendEntry } from "@/lib/types";
 import { parseTransactionCSV, parseAssetCSV, downloadTransactionTemplate, downloadAssetTemplate } from "@/lib/csv-utils";
-import { MOCK_TRANSACTIONS } from "@/lib/mock-data";
+import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
 import { IncomeDonutChart } from "@/components/dashboard/IncomeDonutChart";
@@ -14,12 +14,14 @@ import { TransactionsTable } from "@/components/dashboard/TransactionsTable";
 import { YearlyConsolidated } from "@/components/dashboard/YearlyConsolidated";
 import { WealthTracker } from "@/components/dashboard/WealthTracker";
 import { LoansTab } from "@/components/dashboard/LoansTab";
+import { DividendsTab } from "@/components/dashboard/DividendsTab";
 
 const currentYear = new Date().getFullYear();
 
 const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>([]);
+  const [dividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
   const [year, setYear] = useState(currentYear.toString());
   const txFileRef = useRef<HTMLInputElement>(null);
   const assetFileRef = useRef<HTMLInputElement>(null);
@@ -93,6 +95,7 @@ const Index = () => {
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="wealth">Wealth Tracker</TabsTrigger>
             <TabsTrigger value="loans">Loans</TabsTrigger>
+            <TabsTrigger value="dividends">Dividends</TabsTrigger>
           </TabsList>
 
           <TabsContent value="transactions" className="space-y-6">
@@ -136,6 +139,10 @@ const Index = () => {
 
           <TabsContent value="loans" className="space-y-6">
             <LoansTab transactions={transactions} year={parseInt(year)} />
+          </TabsContent>
+
+          <TabsContent value="dividends" className="space-y-6">
+            <DividendsTab dividends={dividends} year={parseInt(year)} />
           </TabsContent>
         </Tabs>
       </main>
