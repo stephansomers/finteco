@@ -1,7 +1,9 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { ArrowUpDown } from "lucide-react";
 import { Transaction } from "@/lib/types";
 import { formatCurrency, formatNumber, getMonthName } from "@/lib/csv-utils";
 
@@ -10,7 +12,7 @@ interface Props {
   year: number;
 }
 
-const KNOWN_NAMES = ["Vera", "Chris", "Louise", "Maria", "João", "Pedro", "Ana"];
+const KNOWN_NAMES = ["Gabriel", "Mariana", "Rafael", "Fernanda", "Others"];
 
 function extractPerson(description: string): string {
   const desc = description.toLowerCase();
@@ -20,19 +22,33 @@ function extractPerson(description: string): string {
   return "Others";
 }
 
+function isLoanTx(t: Transaction) {
+  return (
+    t.category.toLowerCase().includes("loan") ||
+    t.category.toLowerCase().includes("lend") ||
+    t.category.toLowerCase().includes("repay") ||
+    t.subcategory.toLowerCase().includes("loan") ||
+    t.subcategory.toLowerCase().includes("lend") ||
+    t.subcategory.toLowerCase().includes("repay")
+  );
+}
+
 export function LoansTab({ transactions, year }: Props) {
-  const loanTx = useMemo(() =>
-    transactions.filter(t => {
-      const d = new Date(t.date);
-      return d.getFullYear() === year && (
-        t.category.toLowerCase().includes("loan") ||
-        t.category.toLowerCase().includes("lend") ||
-        t.category.toLowerCase().includes("repay") ||
-        t.subcategory.toLowerCase().includes("loan") ||
-        t.subcategory.toLowerCase().includes("lend") ||
-        t.subcategory.toLowerCase().includes("repay")
-      );
-    }), [transactions, year]);
+  const [loanYear, setLoanYear] = useState<string>(year.toString());
+  const [sortField, setSortField] = useState<"date" | "description" | "category" | "value">("date");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  const allLoanTx = useMemo(() => transactions.filter(isLoanTx), [transactions]);
+
+  const loanYears = useMemo(() => {
+    const yrs = [...new Set(allLoanTx.map(t => new Date(t.date).getFullYear()))].sort((a, b) => b - a);
+    return yrs;
+  }, [allLoanTx]);
+
+  const loanTx = useMemo(() => {
+    if (loanYear === "all") return allLoanTx;
+    return allLoanTx.filter(t => new Date(t.date).getFullYear() === parseInt(loanYear));
+  }, [allLoanTx, loanYear]);
 
   const isRepayment = (t: Transaction) =>
     t.type === "income" || t.category.toLowerCase().includes("repay") || t.subcategory.toLowerCase().includes("repay");
@@ -41,13 +57,11 @@ export function LoansTab({ transactions, year }: Props) {
   const totalRepaid = loanTx.filter(t => isRepayment(t)).reduce((s, t) => s + t.value, 0);
   const outstanding = totalRepaid - totalLent;
 
-  // Monthly consolidated
   const categories = [...new Set(loanTx.map(t => t.subcategory || t.category))].sort();
   const getMonthlyValue = (cat: string, month: number) =>
     loanTx.filter(t => (t.subcategory || t.category) === cat && new Date(t.date).getMonth() === month)
       .reduce((s, t) => s + (isRepayment(t) ? t.value : -t.value), 0);
 
-  // Person consolidation
   const personData = useMemo(() => {
     const map: Record<string, { lent: number; repaid: number }> = {};
     loanTx.forEach(t => {
@@ -65,6 +79,18 @@ export function LoansTab({ transactions, year }: Props) {
       });
   }, [loanTx]);
 
+  const toggleSort = (field: typeof sortField) => {
+    if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortField(field); setSortDir("desc"); }
+  };
+
+  const sortedLoanTx = [...loanTx].sort((a, b) => {
+    const mul = sortDir === "asc" ? 1 : -1;
+    if (sortField === "date") return mul * (new Date(a.date).getTime() - new Date(b.date).getTime());
+    if (sortField === "value") return mul * (a.value - b.value);
+    return mul * ((a[sortField] || "").localeCompare(b[sortField] || ""));
+  });
+
   const tooltipStyle = {
     backgroundColor: "hsl(224, 28%, 10%)",
     border: "1px solid hsl(220, 20%, 18%)",
@@ -72,8 +98,25 @@ export function LoansTab({ transactions, year }: Props) {
     color: "hsl(210, 40%, 96%)",
   };
 
+  const selectedLabel = loanYear === "all" ? "All Years" : loanYear;
+
   return (
     <div className="space-y-6">
+      {/* Year Filter */}
+      <div className="flex items-center gap-2">
+        <Select value={loanYear} onValueChange={setLoanYear}>
+          <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Years</SelectItem>
+            {loanYears.map(y => (
+              <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Annual Summary */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
@@ -125,7 +168,6 @@ export function LoansTab({ transactions, year }: Props) {
                   </TableRow>
                 );
               })}
-              {/* TOTAL row */}
               <TableRow className="border-border/50 bg-secondary/50">
                 <TableCell className="sticky left-0 bg-secondary/50 font-bold">TOTAL</TableCell>
                 {Array.from({ length: 12 }, (_, i) => {
@@ -172,7 +214,6 @@ export function LoansTab({ transactions, year }: Props) {
                     </TableCell>
                   </TableRow>
                 ))}
-                {/* Totals row */}
                 {personData.length > 0 && (
                   <TableRow className="border-border/50 bg-secondary/50">
                     <TableCell className="pl-6 font-bold">Total</TableCell>
@@ -210,21 +251,29 @@ export function LoansTab({ transactions, year }: Props) {
 
       {/* Transactions Table */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Loan Transactions — {year}</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">Loan Transactions — {selectedLabel}</CardTitle></CardHeader>
         <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="border-border/50">
-                <TableHead>Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Value</TableHead>
+                <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("date")}>
+                  Date <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                </TableHead>
+                <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("description")}>
+                  Description <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                </TableHead>
+                <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("category")}>
+                  Category <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                </TableHead>
+                <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("value")}>
+                  Value <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loanTx.length === 0 ? (
+              {sortedLoanTx.length === 0 ? (
                 <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No loan transactions</TableCell></TableRow>
-              ) : loanTx.map((t, i) => (
+              ) : sortedLoanTx.map((t, i) => (
                 <TableRow key={i} className="border-border/50">
                   <TableCell className="text-muted-foreground">{t.date}</TableCell>
                   <TableCell>{t.description}</TableCell>
