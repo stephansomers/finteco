@@ -142,7 +142,7 @@ const Index = () => {
             <LoansTab transactions={transactions} year={parseInt(year)} />
           </TabsContent>
 
-          <TabsContent value="dividends" className="space-y-6">
+          <TabsContent value="dividends" className="mt-6 space-y-6">
             <div className="flex flex-wrap gap-2">
               <input ref={divFileRef} type="file" accept=".csv" className="hidden" onChange={(e) => {
                 const file = e.target.files?.[0];
