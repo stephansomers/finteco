@@ -99,7 +99,7 @@ const Index = () => {
             <TabsTrigger value="dividends">Dividends</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="transactions" className="space-y-6">
+          <TabsContent value="transactions" className="mt-6 space-y-6">
             {/* Upload buttons */}
             <div className="flex flex-wrap gap-2">
               <input ref={txFileRef} type="file" accept=".csv" className="hidden" onChange={handleTxUpload} />
