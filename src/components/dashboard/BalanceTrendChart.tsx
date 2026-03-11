@@ -5,11 +5,11 @@ import { getMonthName, formatCurrency } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
-  year: number;
+  year: number | null;
 }
 
 export function BalanceTrendChart({ transactions, year }: Props) {
-  const yearTx = transactions.filter(t => new Date(t.date).getFullYear() === year);
+  const yearTx = year ? transactions.filter(t => new Date(t.date).getFullYear() === year) : transactions;
   
   const data = Array.from({ length: 12 }, (_, i) => {
     const monthTx = yearTx.filter(t => new Date(t.date).getMonth() === i);
