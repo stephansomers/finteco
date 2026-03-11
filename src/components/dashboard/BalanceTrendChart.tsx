@@ -20,7 +20,7 @@ export function BalanceTrendChart({ transactions, year }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Balance Trend — {year}</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">Balance Trend{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
       <CardContent>
         <div className="h-[250px]">
           <ResponsiveContainer width="100%" height="100%">

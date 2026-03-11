@@ -26,7 +26,7 @@ export function YearlyConsolidated({ transactions, year }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Yearly Consolidated — {year}</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">Yearly Consolidated{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
       <CardContent>
         <Accordion type="single" collapsible>
           <AccordionItem value="consolidated" className="border-border/50">

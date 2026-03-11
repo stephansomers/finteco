@@ -30,7 +30,7 @@ export function TransactionsTable({ transactions, year }: Props) {
   };
 
   const filtered = useMemo(() => {
-    let tx = transactions.filter(t => new Date(t.date).getFullYear() === year);
+    let tx = year ? transactions.filter(t => new Date(t.date).getFullYear() === year) : [...transactions];
     if (month !== "all") {
       tx = tx.filter(t => new Date(t.date).getMonth() === parseInt(month));
     }
