@@ -138,7 +138,7 @@ const Index = () => {
             <WealthTracker assets={assets} />
           </TabsContent>
 
-          <TabsContent value="loans" className="space-y-6">
+          <TabsContent value="loans" className="mt-6 space-y-6">
             <LoansTab transactions={transactions} year={parseInt(year)} />
           </TabsContent>
 
