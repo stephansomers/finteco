@@ -111,7 +111,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
         <Tabs defaultValue="transactions" className="space-y-6">
           <TabsList className="bg-secondary w-full justify-start">
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
