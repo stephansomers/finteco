@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { Transaction } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
 
@@ -23,6 +24,7 @@ export function TransactionsTable({ transactions, year }: Props) {
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
   const [month, setMonth] = useState<string>("all");
+  const [tableOpen, setTableOpen] = useState(true);
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
@@ -52,48 +54,57 @@ export function TransactionsTable({ transactions, year }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-        <Select value={month} onValueChange={setMonth}>
-          <SelectTrigger className="w-[140px] border-border/50 bg-secondary">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Months</SelectItem>
-            {months.map((m, i) => (
-              <SelectItem key={i} value={i.toString()}>{m}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </CardHeader>
-      <CardContent className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-border/50">
-              <SortHeader field="date">Date</SortHeader>
-              <SortHeader field="description">Description</SortHeader>
-              <SortHeader field="category">Category</SortHeader>
-              <SortHeader field="subcategory">Subcategory</SortHeader>
-              <SortHeader field="value" className="text-right">Value</SortHeader>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sorted.length === 0 ? (
-              <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground">No transactions</TableCell></TableRow>
-            ) : sorted.map((t, i) => (
-              <TableRow key={i} className="border-border/50">
-                <TableCell className="text-muted-foreground">{t.date}</TableCell>
-                <TableCell>{t.description}</TableCell>
-                <TableCell>{t.category}</TableCell>
-                <TableCell className="text-muted-foreground">{t.subcategory}</TableCell>
-                <TableCell className={`text-right font-medium ${t.type === "income" ? "text-chart-income" : "text-chart-expense"}`}>
-                  {t.type === "income" ? "+" : "-"}{formatCurrency(t.value)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
+      <Collapsible open={tableOpen} onOpenChange={setTableOpen}>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-sm font-medium">Transactions</CardTitle>
+            <CollapsibleTrigger className="rounded-md p-1 hover:bg-secondary">
+              <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${tableOpen ? "rotate-180" : ""}`} />
+            </CollapsibleTrigger>
+          </div>
+          <Select value={month} onValueChange={setMonth}>
+            <SelectTrigger className="w-[140px] border-border/50 bg-secondary">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Months</SelectItem>
+              {months.map((m, i) => (
+                <SelectItem key={i} value={i.toString()}>{m}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardHeader>
+        <CollapsibleContent>
+          <CardContent className="overflow-x-auto scrollbar-thin">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-border/50">
+                  <SortHeader field="date">Date</SortHeader>
+                  <SortHeader field="description">Description</SortHeader>
+                  <SortHeader field="category">Category</SortHeader>
+                  <SortHeader field="subcategory">Subcategory</SortHeader>
+                  <SortHeader field="value" className="text-right">Value</SortHeader>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sorted.length === 0 ? (
+                  <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground">No transactions</TableCell></TableRow>
+                ) : sorted.map((t, i) => (
+                  <TableRow key={i} className="border-border/50">
+                    <TableCell className="text-muted-foreground">{t.date}</TableCell>
+                    <TableCell>{t.description}</TableCell>
+                    <TableCell>{t.category}</TableCell>
+                    <TableCell className="text-muted-foreground">{t.subcategory}</TableCell>
+                    <TableCell className={`text-right font-medium ${t.type === "income" ? "text-chart-income" : "text-chart-expense"}`}>
+                      {t.type === "income" ? "+" : "-"}{formatCurrency(t.value)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </CollapsibleContent>
+      </Collapsible>
     </Card>
   );
 }

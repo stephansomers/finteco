@@ -154,26 +154,17 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="dividends" className="mt-6 space-y-6">
-            <div className="flex flex-wrap gap-2">
-              <input ref={divFileRef} type="file" accept=".csv" className="hidden" onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = ev => {
-                  const parsed = parseDividendCSV(ev.target?.result as string);
-                  setDividends(prev => [...prev, ...parsed]);
-                };
-                reader.readAsText(file);
-                e.target.value = "";
-              }} />
-              <Button onClick={() => divFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
-                <Upload className="mr-2 h-4 w-4" /> Upload Dividends CSV
-              </Button>
-              <Button onClick={downloadDividendTemplate} variant="ghost" size="sm">
-                <Download className="mr-2 h-4 w-4" /> Template
-              </Button>
-            </div>
-            <DividendsTab dividends={dividends} year={currentYear} />
+            <DividendsTab dividends={dividends} year={currentYear} divFileRef={divFileRef} onDivUpload={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = ev => {
+                const parsed = parseDividendCSV(ev.target?.result as string);
+                setDividends(prev => [...prev, ...parsed]);
+              };
+              reader.readAsText(file);
+              e.target.value = "";
+            }} />
           </TabsContent>
 
           <TabsContent value="wealth" className="mt-6 space-y-6">

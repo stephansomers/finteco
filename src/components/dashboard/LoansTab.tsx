@@ -2,8 +2,9 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { Transaction } from "@/lib/types";
 import { formatCurrency, formatNumber, getMonthName } from "@/lib/csv-utils";
 
@@ -37,6 +38,7 @@ export function LoansTab({ transactions, year }: Props) {
   const [loanYear, setLoanYear] = useState<string>(year.toString());
   const [sortField, setSortField] = useState<"date" | "description" | "category" | "value">("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [txTableOpen, setTxTableOpen] = useState(true);
 
   const allLoanTx = useMemo(() => transactions.filter(isLoanTx), [transactions]);
 
@@ -249,43 +251,54 @@ export function LoansTab({ transactions, year }: Props) {
         </Card>
       </div>
 
-      {/* Transactions Table */}
+      {/* Transactions Table - Collapsible */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Loan Transactions — {selectedLabel}</CardTitle></CardHeader>
-        <CardContent className="overflow-x-auto scrollbar-thin">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-border/50">
-                <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("date")}>
-                  Date <ArrowUpDown className="ml-1 inline h-3 w-3" />
-                </TableHead>
-                <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("description")}>
-                  Description <ArrowUpDown className="ml-1 inline h-3 w-3" />
-                </TableHead>
-                <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("category")}>
-                  Category <ArrowUpDown className="ml-1 inline h-3 w-3" />
-                </TableHead>
-                <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("value")}>
-                  Value <ArrowUpDown className="ml-1 inline h-3 w-3" />
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedLoanTx.length === 0 ? (
-                <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No loan transactions</TableCell></TableRow>
-              ) : sortedLoanTx.map((t, i) => (
-                <TableRow key={i} className="border-border/50">
-                  <TableCell className="text-muted-foreground">{t.date}</TableCell>
-                  <TableCell>{t.description}</TableCell>
-                  <TableCell>{t.category}</TableCell>
-                  <TableCell className={`text-right font-medium ${isRepayment(t) ? "text-chart-income" : "text-chart-expense"}`}>
-                    {isRepayment(t) ? "+" : "-"}{formatCurrency(t.value)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
+        <Collapsible open={txTableOpen} onOpenChange={setTxTableOpen}>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-sm font-medium">Loan Transactions — {selectedLabel}</CardTitle>
+              <CollapsibleTrigger className="rounded-md p-1 hover:bg-secondary">
+                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${txTableOpen ? "rotate-180" : ""}`} />
+              </CollapsibleTrigger>
+            </div>
+          </CardHeader>
+          <CollapsibleContent>
+            <CardContent className="overflow-x-auto scrollbar-thin">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-border/50">
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("date")}>
+                      Date <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("description")}>
+                      Description <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("category")}>
+                      Category <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("value")}>
+                      Value <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedLoanTx.length === 0 ? (
+                    <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No loan transactions</TableCell></TableRow>
+                  ) : sortedLoanTx.map((t, i) => (
+                    <TableRow key={i} className="border-border/50">
+                      <TableCell className="text-muted-foreground">{t.date}</TableCell>
+                      <TableCell>{t.description}</TableCell>
+                      <TableCell>{t.category}</TableCell>
+                      <TableCell className={`text-right font-medium ${isRepayment(t) ? "text-chart-income" : "text-chart-expense"}`}>
+                        {isRepayment(t) ? "+" : "-"}{formatCurrency(t.value)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
       </Card>
     </div>
   );

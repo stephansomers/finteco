@@ -1,9 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, RefObject } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Upload, Download } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { DividendEntry } from "@/lib/types";
-import { formatCurrency, getMonthName } from "@/lib/csv-utils";
+import { formatCurrency, getMonthName, downloadDividendTemplate } from "@/lib/csv-utils";
 
 const COLORS = [
   "hsl(210, 100%, 52%)", "hsl(160, 84%, 39%)", "hsl(47, 100%, 50%)",
@@ -14,9 +16,11 @@ const COLORS = [
 interface Props {
   dividends: DividendEntry[];
   year: number;
+  divFileRef: RefObject<HTMLInputElement>;
+  onDivUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function DividendsTab({ dividends, year }: Props) {
+export function DividendsTab({ dividends, year, divFileRef, onDivUpload }: Props) {
   const [divYear, setDivYear] = useState<string>(year.toString());
 
   const divYears = useMemo(() => {
@@ -75,8 +79,17 @@ export function DividendsTab({ dividends, year }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Year Filter */}
-      <div className="flex items-center gap-2">
+      {/* Upload buttons + Year filter */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          <input ref={divFileRef} type="file" accept=".csv" className="hidden" onChange={onDivUpload} />
+          <Button onClick={() => divFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
+            <Upload className="mr-2 h-4 w-4" /> Upload Dividends CSV
+          </Button>
+          <Button onClick={downloadDividendTemplate} variant="ghost" size="sm">
+            <Download className="mr-2 h-4 w-4" /> Template
+          </Button>
+        </div>
         <Select value={divYear} onValueChange={setDivYear}>
           <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
             <SelectValue />
