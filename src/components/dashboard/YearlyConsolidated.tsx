@@ -6,13 +6,13 @@ import { formatNumber, getMonthName } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
-  year: number;
+  year: number | null;
 }
 
 export function YearlyConsolidated({ transactions, year }: Props) {
-  const yearTx = transactions.filter(
-    t => new Date(t.date).getFullYear() === year
-  );
+  const yearTx = year
+    ? transactions.filter(t => new Date(t.date).getFullYear() === year)
+    : transactions;
 
   // Separate income and expense subcategories, incomes first
   const incomeSubcategories = [...new Set(yearTx.filter(t => t.type === "income").map(t => t.subcategory))].sort();
@@ -26,7 +26,7 @@ export function YearlyConsolidated({ transactions, year }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Yearly Consolidated — {year}</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">Yearly Consolidated{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
       <CardContent>
         <Accordion type="single" collapsible>
           <AccordionItem value="consolidated" className="border-border/50">
