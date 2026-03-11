@@ -136,7 +136,7 @@ export function LoansTab({ transactions, year }: Props) {
       {/* Monthly Consolidated Table */}
       <Card className="border-border/50 bg-card">
         <CardHeader><CardTitle className="text-sm font-medium">Monthly Consolidated</CardTitle></CardHeader>
-        <CardContent className="overflow-x-auto">
+        <CardContent className="overflow-x-auto scrollbar-thin">
           <Table>
             <TableHeader>
               <TableRow className="border-border/50">
