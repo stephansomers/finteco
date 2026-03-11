@@ -92,7 +92,7 @@ const Index = () => {
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <Tabs defaultValue="transactions" className="space-y-6">
-          <TabsList className="bg-secondary">
+          <TabsList className="bg-secondary w-full justify-start">
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="wealth">Wealth Tracker</TabsTrigger>
             <TabsTrigger value="loans">Loans</TabsTrigger>
