@@ -103,7 +103,7 @@ const Index = () => {
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Sticky Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
-        <div className="mx-auto flex max-w-7xl items-center px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-[1600px] items-center px-4 py-3 sm:px-6">
           <h1 className="text-lg font-bold tracking-tight">
             <span className="text-primary">Fin</span>Dashboard
           </h1>
