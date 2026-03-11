@@ -125,7 +125,7 @@ const Index = () => {
             <TransactionsTable transactions={transactions} year={parseInt(year)} />
           </TabsContent>
 
-          <TabsContent value="wealth" className="space-y-6">
+          <TabsContent value="wealth" className="mt-6 space-y-6">
             <div className="flex flex-wrap gap-2">
               <input ref={assetFileRef} type="file" accept=".csv" className="hidden" onChange={handleAssetUpload} />
               <Button onClick={() => assetFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
