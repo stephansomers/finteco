@@ -14,7 +14,10 @@ export function YearlyConsolidated({ transactions, year }: Props) {
     t => new Date(t.date).getFullYear() === year
   );
 
-  const subcategories = [...new Set(yearTx.map(t => t.subcategory))].sort();
+  // Separate income and expense subcategories, incomes first
+  const incomeSubcategories = [...new Set(yearTx.filter(t => t.type === "income").map(t => t.subcategory))].sort();
+  const expenseSubcategories = [...new Set(yearTx.filter(t => t.type === "expense").map(t => t.subcategory))].sort();
+  const subcategories = [...incomeSubcategories, ...expenseSubcategories].filter((v, i, a) => a.indexOf(v) === i);
 
   const getData = (sub: string, month: number) =>
     yearTx
@@ -28,7 +31,7 @@ export function YearlyConsolidated({ transactions, year }: Props) {
         <Accordion type="single" collapsible>
           <AccordionItem value="consolidated" className="border-border/50">
             <AccordionTrigger className="text-sm">View Breakdown by Subcategory</AccordionTrigger>
-            <AccordionContent className="overflow-x-auto">
+            <AccordionContent className="overflow-x-auto scrollbar-thin">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50">

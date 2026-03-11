@@ -92,14 +92,14 @@ const Index = () => {
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <Tabs defaultValue="transactions" className="space-y-6">
-          <TabsList className="bg-secondary">
+          <TabsList className="bg-secondary w-full justify-start">
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="wealth">Wealth Tracker</TabsTrigger>
             <TabsTrigger value="loans">Loans</TabsTrigger>
             <TabsTrigger value="dividends">Dividends</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="transactions" className="space-y-6">
+          <TabsContent value="transactions" className="mt-6 space-y-6">
             {/* Upload buttons */}
             <div className="flex flex-wrap gap-2">
               <input ref={txFileRef} type="file" accept=".csv" className="hidden" onChange={handleTxUpload} />
@@ -125,7 +125,7 @@ const Index = () => {
             <TransactionsTable transactions={transactions} year={parseInt(year)} />
           </TabsContent>
 
-          <TabsContent value="wealth" className="space-y-6">
+          <TabsContent value="wealth" className="mt-6 space-y-6">
             <div className="flex flex-wrap gap-2">
               <input ref={assetFileRef} type="file" accept=".csv" className="hidden" onChange={handleAssetUpload} />
               <Button onClick={() => assetFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
@@ -138,11 +138,11 @@ const Index = () => {
             <WealthTracker assets={assets} />
           </TabsContent>
 
-          <TabsContent value="loans" className="space-y-6">
+          <TabsContent value="loans" className="mt-6 space-y-6">
             <LoansTab transactions={transactions} year={parseInt(year)} />
           </TabsContent>
 
-          <TabsContent value="dividends" className="space-y-6">
+          <TabsContent value="dividends" className="mt-6 space-y-6">
             <div className="flex flex-wrap gap-2">
               <input ref={divFileRef} type="file" accept=".csv" className="hidden" onChange={(e) => {
                 const file = e.target.files?.[0];
