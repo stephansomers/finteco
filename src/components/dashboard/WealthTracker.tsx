@@ -32,6 +32,15 @@ export function WealthTracker({ assets }: Props) {
     return ((curr - prev) / prev) * 100;
   };
 
+  // Total variation row
+  const getTotalVariation = (periodIdx: number) => {
+    if (periodIdx === 0) return null;
+    const currTotal = institutions.reduce((s, inst) => s + (getValue(inst, periods[periodIdx]) ?? 0), 0);
+    const prevTotal = institutions.reduce((s, inst) => s + (getValue(inst, periods[periodIdx - 1]) ?? 0), 0);
+    if (prevTotal === 0) return null;
+    return ((currTotal - prevTotal) / prevTotal) * 100;
+  };
+
   const wealthData = periods.map(p => {
     const total = institutions.reduce((s, inst) => s + (getValue(inst, p) ?? 0), 0);
     const entry: Record<string, any> = { period: p, total };
@@ -88,6 +97,24 @@ export function WealthTracker({ assets }: Props) {
                       })}
                     </TableRow>
                   ))}
+                  {/* Total row with percentage variation */}
+                  <TableRow className="border-border/50 bg-secondary/50">
+                    <TableCell className="sticky left-0 bg-secondary/50 font-bold">Total</TableCell>
+                    {periods.map((p, pi) => {
+                      const total = institutions.reduce((s, inst) => s + (getValue(inst, p) ?? 0), 0);
+                      const variation = getTotalVariation(pi);
+                      return (
+                        <TableCell key={p} className="text-right">
+                          <div className="font-bold">{formatNumber(total)}</div>
+                          {variation !== null && (
+                            <div className={`text-xs font-medium ${variation >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
+                              {variation >= 0 ? "+" : ""}{variation.toFixed(1)}%
+                            </div>
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
                 </TableBody>
               </Table>
             </CardContent>
