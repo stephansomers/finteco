@@ -31,7 +31,7 @@ export function YearlyConsolidated({ transactions, year }: Props) {
         <Accordion type="single" collapsible>
           <AccordionItem value="consolidated" className="border-border/50">
             <AccordionTrigger className="text-sm">View Breakdown by Subcategory</AccordionTrigger>
-            <AccordionContent className="overflow-x-auto">
+            <AccordionContent className="overflow-x-auto scrollbar-thin">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50">
