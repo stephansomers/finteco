@@ -48,7 +48,7 @@ export function WealthTracker({ assets }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Assets Table - Collapsible, no scroll */}
+      {/* Assets Table - Collapsible */}
       <Card className="border-border/50 bg-card">
         <Collapsible open={tableOpen} onOpenChange={setTableOpen}>
           <CardHeader className="flex flex-row items-center justify-between">
@@ -58,7 +58,7 @@ export function WealthTracker({ assets }: Props) {
             </CollapsibleTrigger>
           </CardHeader>
           <CollapsibleContent>
-            <CardContent className="overflow-x-auto">
+            <CardContent className="overflow-x-auto scrollbar-thin">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50">
@@ -95,52 +95,50 @@ export function WealthTracker({ assets }: Props) {
         </Collapsible>
       </Card>
 
-      {/* Charts */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Total Wealth Evolution</CardTitle></CardHeader>
-          <CardContent>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={wealthData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
-                  <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
-                  <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
-                  <Line type="monotone" dataKey="total" stroke="hsl(160, 84%, 39%)" strokeWidth={2} dot={{ r: 3 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Charts stacked vertically */}
+      <Card className="border-border/50 bg-card">
+        <CardHeader><CardTitle className="text-sm font-medium">Total Wealth Evolution</CardTitle></CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={wealthData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
+                <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
+                <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
+                <Line type="monotone" dataKey="total" stroke="hsl(160, 84%, 39%)" strokeWidth={2} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Wealth by Institution</CardTitle></CardHeader>
-          <CardContent>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={wealthData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
-                  <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
-                  <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
-                  <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
-                  {institutions.map((inst, i) => (
-                    <Area key={inst} type="monotone" dataKey={inst} stackId="1" fill={COLORS[i % COLORS.length]} stroke={COLORS[i % COLORS.length]} fillOpacity={0.6} />
-                  ))}
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-3">
-              {institutions.map((inst, i) => (
-                <div key={inst} className="flex items-center gap-1.5 text-xs">
-                  <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                  <span className="text-muted-foreground">{inst}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="border-border/50 bg-card">
+        <CardHeader><CardTitle className="text-sm font-medium">Wealth by Institution</CardTitle></CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={wealthData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 20%, 18%)" />
+                <XAxis dataKey="period" stroke="hsl(215, 20%, 55%)" fontSize={12} />
+                <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
+                <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
+                {institutions.map((inst, i) => (
+                  <Area key={inst} type="monotone" dataKey={inst} stackId="1" fill={COLORS[i % COLORS.length]} stroke={COLORS[i % COLORS.length]} fillOpacity={0.6} />
+                ))}
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {institutions.map((inst, i) => (
+              <div key={inst} className="flex items-center gap-1.5 text-xs">
+                <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
+                <span className="text-muted-foreground">{inst}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

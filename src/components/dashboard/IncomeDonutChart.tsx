@@ -16,7 +16,7 @@ interface Props {
 export function IncomeDonutChart({ transactions }: Props) {
   const incomes = transactions.filter(t => t.type === "income");
   const grouped = incomes.reduce<Record<string, number>>((acc, t) => {
-    acc[t.category] = (acc[t.category] || 0) + t.value;
+    acc[t.subcategory || t.category] = (acc[t.subcategory || t.category] || 0) + t.value;
     return acc;
   }, {});
 

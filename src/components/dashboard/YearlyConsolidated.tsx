@@ -14,7 +14,10 @@ export function YearlyConsolidated({ transactions, year }: Props) {
     t => new Date(t.date).getFullYear() === year
   );
 
-  const subcategories = [...new Set(yearTx.map(t => t.subcategory))].sort();
+  // Separate income and expense subcategories, incomes first
+  const incomeSubcategories = [...new Set(yearTx.filter(t => t.type === "income").map(t => t.subcategory))].sort();
+  const expenseSubcategories = [...new Set(yearTx.filter(t => t.type === "expense").map(t => t.subcategory))].sort();
+  const subcategories = [...incomeSubcategories, ...expenseSubcategories].filter((v, i, a) => a.indexOf(v) === i);
 
   const getData = (sub: string, month: number) =>
     yearTx
