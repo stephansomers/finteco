@@ -8,7 +8,7 @@ import { formatCurrency } from "@/lib/csv-utils";
 
 interface Props {
   transactions: Transaction[];
-  year: number;
+  year: number | null;
 }
 
 type SortField = "date" | "value" | "description" | "category" | "subcategory";
