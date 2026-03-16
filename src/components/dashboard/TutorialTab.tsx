@@ -18,29 +18,29 @@ interface Props {
 }
 
 const features = [
-  { icon: BarChart3, title: "Dashboard", desc: "Resumo financeiro do mês com KPIs e gráficos interativos." },
-  { icon: DollarSign, title: "Receitas", desc: "Controle de todas as entradas de dinheiro." },
-  { icon: CreditCard, title: "Despesas", desc: "Controle detalhado dos gastos por categoria." },
-  { icon: CalendarDays, title: "Filtro por Ano", desc: "Permite navegar entre períodos e comparar anos." },
-  { icon: TrendingUp, title: "Consolidados", desc: "Análise de despesas e receitas por categoria." },
-  { icon: FileSpreadsheet, title: "Importação / Exportação", desc: "Utilize templates CSV para alimentar o sistema." },
+  { icon: BarChart3, title: "Dashboard", desc: "Monthly financial summary with KPIs and interactive charts." },
+  { icon: DollarSign, title: "Income", desc: "Track all your money inflows." },
+  { icon: CreditCard, title: "Expenses", desc: "Detailed spending control by category." },
+  { icon: CalendarDays, title: "Year Filter", desc: "Navigate between periods and compare years." },
+  { icon: TrendingUp, title: "Consolidated", desc: "Income and expense analysis by category." },
+  { icon: FileSpreadsheet, title: "Import / Export", desc: "Use CSV templates to feed the system." },
 ];
 
 const steps = [
   {
     number: "01",
-    title: "Importe seus dados",
-    desc: "Baixe os templates CSV, preencha com suas transações, dividendos ou ativos, e faça o upload na seção abaixo.",
+    title: "Import your data",
+    desc: "Download the CSV templates, fill them with your transactions, dividends, or assets, and upload them in the section below.",
   },
   {
     number: "02",
-    title: "Visualize o consolidado mensal",
-    desc: "O dashboard mostra automaticamente o total de receitas, total de despesas e o saldo do mês.",
+    title: "View monthly consolidated",
+    desc: "The dashboard automatically displays total income, total expenses, and the monthly balance.",
   },
   {
     number: "03",
-    title: "Analise seus dados",
-    desc: "Filtre por ano, visualize consolidados por categoria e compare períodos para entender sua evolução financeira.",
+    title: "Analyze your data",
+    desc: "Filter by year, view consolidated reports by category, and compare periods to understand your financial progress.",
   },
 ];
 
@@ -59,14 +59,14 @@ export function TutorialTab({ onNavigate, txFileRef, assetFileRef, divFileRef, o
       {/* Header */}
       <div className="text-center space-y-2 py-6">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Como usar o <span className="text-primary">Dashboard Financeiro</span>
+          How to Use the <span className="text-primary">Financial Dashboard</span>
         </h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Guia rápido para organizar suas finanças
+          A quick guide to organizing your finances
         </p>
       </div>
 
-      {/* Visão geral */}
+      {/* Overview */}
       <Card className="border-border/50 bg-card">
         <CardContent className="p-6 sm:p-8">
           <div className="flex items-start gap-4">
@@ -74,17 +74,17 @@ export function TutorialTab({ onNavigate, txFileRef, assetFileRef, divFileRef, o
               <Eye className="h-6 w-6 text-primary" />
             </div>
             <div className="space-y-3">
-              <h3 className="text-xl font-semibold">Visão Geral</h3>
+              <h3 className="text-xl font-semibold">Overview</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Este sistema permite que você tenha controle total das suas finanças pessoais.
-                Com ele, você pode:
+                This system gives you full control over your personal finances.
+                With it, you can:
               </p>
               <ul className="grid gap-2 sm:grid-cols-2 text-sm text-muted-foreground">
                 {[
-                  "Registrar receitas e despesas",
-                  "Visualizar consolidados mensais",
-                  "Analisar evolução financeira",
-                  "Acompanhar dividendos e patrimônio",
+                  "Track income and expenses",
+                  "View monthly consolidated reports",
+                  "Analyze financial progress",
+                  "Monitor dividends and wealth",
                 ].map(item => (
                   <li key={item} className="flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
@@ -97,10 +97,10 @@ export function TutorialTab({ onNavigate, txFileRef, assetFileRef, divFileRef, o
         </CardContent>
       </Card>
 
-      {/* Passo a passo */}
+      {/* Step by step */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold flex items-center gap-2">
-          <Layers className="h-5 w-5 text-primary" /> Passo a Passo
+          <Layers className="h-5 w-5 text-primary" /> Step by Step
         </h3>
         <div className="grid gap-4 sm:grid-cols-3">
           {steps.map(step => (
@@ -117,10 +117,10 @@ export function TutorialTab({ onNavigate, txFileRef, assetFileRef, divFileRef, o
         </div>
       </div>
 
-      {/* Funcionalidades */}
+      {/* Features */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold flex items-center gap-2">
-          <PieChart className="h-5 w-5 text-primary" /> Funcionalidades do Sistema
+          <PieChart className="h-5 w-5 text-primary" /> System Features
         </h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {features.map(f => (
@@ -139,16 +139,16 @@ export function TutorialTab({ onNavigate, txFileRef, assetFileRef, divFileRef, o
         </div>
       </div>
 
-      {/* Importação de dados */}
+      {/* Data Import */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold flex items-center gap-2">
-          <FileSpreadsheet className="h-5 w-5 text-primary" /> Importação de Dados via CSV
+          <FileSpreadsheet className="h-5 w-5 text-primary" /> CSV Data Import
         </h3>
         <Card className="border-border/50 bg-card">
           <CardContent className="p-6 sm:p-8 space-y-6">
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Utilize os templates CSV padronizados para importar seus dados financeiros.
-              Baixe o template, preencha com seus dados e faça o upload.
+              Use the standardized CSV templates to import your financial data.
+              Download the template, fill it with your data, and upload it.
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
               {imports.map(imp => (
@@ -195,7 +195,7 @@ export function TutorialTab({ onNavigate, txFileRef, assetFileRef, divFileRef, o
           className="text-base px-8 py-6 h-auto"
           onClick={() => onNavigate("transactions")}
         >
-          Começar a usar o sistema <ArrowRight className="ml-2 h-5 w-5" />
+          Start using the system <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>
     </div>

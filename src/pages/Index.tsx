@@ -124,7 +124,7 @@ const Index = () => {
       <main className="mx-auto max-w-[1800px] px-4 py-6 sm:px-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-secondary w-full justify-start">
-            <TabsTrigger value="tutorial">Como Usar</TabsTrigger>
+            <TabsTrigger value="tutorial">How to Use</TabsTrigger>
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="loans">Loans</TabsTrigger>
             <TabsTrigger value="dividends">Dividends</TabsTrigger>
