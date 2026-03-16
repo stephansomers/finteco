@@ -1,10 +1,8 @@
 import { useState, useMemo, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Upload, Download } from "lucide-react";
 import { Transaction, AssetSnapshot, DividendEntry } from "@/lib/types";
-import { parseTransactionCSV, parseAssetCSV, parseDividendCSV, downloadTransactionTemplate, downloadAssetTemplate, downloadDividendTemplate } from "@/lib/csv-utils";
+import { parseTransactionCSV, parseAssetCSV, parseDividendCSV } from "@/lib/csv-utils";
 import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS, MOCK_ASSETS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
@@ -15,6 +13,7 @@ import { YearlyConsolidated } from "@/components/dashboard/YearlyConsolidated";
 import { WealthTracker } from "@/components/dashboard/WealthTracker";
 import { LoansTab } from "@/components/dashboard/LoansTab";
 import { DividendsTab } from "@/components/dashboard/DividendsTab";
+import { TutorialTab } from "@/components/dashboard/TutorialTab";
 
 const currentYear = new Date().getFullYear();
 
@@ -24,6 +23,7 @@ const Index = () => {
   const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
   const [txYear, setTxYear] = useState(currentYear.toString());
   const [wealthYear, setWealthYear] = useState("all");
+  const [activeTab, setActiveTab] = useState("transactions");
   const txFileRef = useRef<HTMLInputElement>(null);
   const assetFileRef = useRef<HTMLInputElement>(null);
   const divFileRef = useRef<HTMLInputElement>(null);
@@ -85,6 +85,18 @@ const Index = () => {
     e.target.value = "";
   };
 
+  const handleDivUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const parsed = parseDividendCSV(ev.target?.result as string);
+      setDividends(prev => [...prev, ...parsed]);
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
   const YearFilter = ({ value, onChange, years }: { value: string; onChange: (v: string) => void; years: number[] }) => (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
@@ -101,43 +113,43 @@ const Index = () => {
 
   return (
     <div className="dark min-h-screen bg-background text-foreground">
-      {/* Sticky Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
-        <div className="mx-auto flex max-w-[1600px] items-center px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-[1800px] items-center px-4 py-3 sm:px-6">
           <h1 className="text-lg font-bold tracking-tight">
             <span className="text-primary">Fin</span>Dashboard
           </h1>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-        <Tabs defaultValue="transactions" className="space-y-6">
+      <main className="mx-auto max-w-[1800px] px-4 py-6 sm:px-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-secondary w-full justify-start">
+            <TabsTrigger value="tutorial">Como Usar</TabsTrigger>
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="loans">Loans</TabsTrigger>
             <TabsTrigger value="dividends">Dividends</TabsTrigger>
             <TabsTrigger value="wealth">Wealth Tracker</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="tutorial" className="mt-6">
+            <TutorialTab
+              onNavigate={setActiveTab}
+              txFileRef={txFileRef}
+              assetFileRef={assetFileRef}
+              divFileRef={divFileRef}
+              onTxUpload={handleTxUpload}
+              onAssetUpload={handleAssetUpload}
+              onDivUpload={handleDivUpload}
+            />
+          </TabsContent>
+
           <TabsContent value="transactions" className="mt-6 space-y-6">
-            {/* Upload buttons + Year filter */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap gap-2">
-                <input ref={txFileRef} type="file" accept=".csv" className="hidden" onChange={handleTxUpload} />
-                <Button onClick={() => txFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
-                  <Upload className="mr-2 h-4 w-4" /> Upload CSV
-                </Button>
-                <Button onClick={downloadTransactionTemplate} variant="ghost" size="sm">
-                  <Download className="mr-2 h-4 w-4" /> Template
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <YearFilter value={txYear} onChange={setTxYear} years={txYears} />
             </div>
 
             <KpiCards revenue={revenue} expenses={expenses} travel={travel} balance={balance} />
-
-            <YearlyConsolidated transactions={txYear === "all" ? transactions : transactions} year={txYear === "all" ? null : parseInt(txYear)} />
+            <YearlyConsolidated transactions={transactions} year={txYear === "all" ? null : parseInt(txYear)} />
 
             <div className="grid gap-6 lg:grid-cols-2">
               <ExpenseDonutChart transactions={yearTx} />
@@ -145,7 +157,6 @@ const Index = () => {
             </div>
 
             <BalanceTrendChart transactions={transactions} year={txYear === "all" ? null : parseInt(txYear)} />
-
             <TransactionsTable transactions={transactions} year={txYear === "all" ? null : parseInt(txYear)} />
           </TabsContent>
 
@@ -154,30 +165,11 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="dividends" className="mt-6 space-y-6">
-            <DividendsTab dividends={dividends} year={currentYear} divFileRef={divFileRef} onDivUpload={(e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              const reader = new FileReader();
-              reader.onload = ev => {
-                const parsed = parseDividendCSV(ev.target?.result as string);
-                setDividends(prev => [...prev, ...parsed]);
-              };
-              reader.readAsText(file);
-              e.target.value = "";
-            }} />
+            <DividendsTab dividends={dividends} year={currentYear} />
           </TabsContent>
 
           <TabsContent value="wealth" className="mt-6 space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap gap-2">
-                <input ref={assetFileRef} type="file" accept=".csv" className="hidden" onChange={handleAssetUpload} />
-                <Button onClick={() => assetFileRef.current?.click()} variant="outline" size="sm" className="border-border/50">
-                  <Upload className="mr-2 h-4 w-4" /> Upload Assets CSV
-                </Button>
-                <Button onClick={downloadAssetTemplate} variant="ghost" size="sm">
-                  <Download className="mr-2 h-4 w-4" /> Template
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <YearFilter value={wealthYear} onChange={setWealthYear} years={wealthYears} />
             </div>
             <WealthTracker assets={filteredAssets} />
