@@ -105,7 +105,7 @@ export function LoansTab({ transactions, year }: Props) {
   return (
     <div className="space-y-6">
       {/* Year Filter */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-end gap-2">
         <Select value={loanYear} onValueChange={setLoanYear}>
           <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
             <SelectValue />
