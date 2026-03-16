@@ -105,7 +105,7 @@ export function WealthTracker({ assets }: Props) {
                       const variation = getTotalVariation(pi);
                       return (
                         <TableCell key={p} className="text-right">
-                          <div className="font-bold">{formatNumber(total)}</div>
+                          <div className="font-bold">{!isNaN(total) ? formatNumber(total) : "—"}</div>
                           {variation !== null && (
                             <div className={`text-xs font-medium ${variation >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
                               {variation >= 0 ? "+" : ""}{variation.toFixed(1)}%
