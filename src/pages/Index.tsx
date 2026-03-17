@@ -72,15 +72,15 @@ const Index = () => {
 
         const loaded: string[] = [];
         if (result.transactions.length > 0) {
-          setTransactions(prev => [...prev, ...result.transactions]);
+          setTransactions(result.transactions);
           loaded.push(`${result.transactions.length} transactions`);
         }
         if (result.dividends.length > 0) {
-          setDividends(prev => [...prev, ...result.dividends]);
+          setDividends(result.dividends);
           loaded.push(`${result.dividends.length} dividends`);
         }
         if (result.assets.length > 0) {
-          setAssets(prev => [...prev, ...result.assets]);
+          setAssets(result.assets);
           loaded.push(`${result.assets.length} assets`);
         }
 
