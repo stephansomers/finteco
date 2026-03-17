@@ -8,15 +8,23 @@ export interface ExcelImportResult {
   errors: string[];
 }
 
-/** Convert dd/mm/yyyy to yyyy-mm-dd for internal use */
-function parseDateDMY(raw: string): string {
+/** Convert date value (dd/mm/yyyy string or Excel serial number) to yyyy-mm-dd */
+function parseDateValue(raw: unknown): string {
+  if (typeof raw === "number") {
+    // Excel serial number → JS Date
+    const d = new Date(Math.round((raw - 25569) * 86400000));
+    const yyyy = d.getUTCFullYear();
+    const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const dd = String(d.getUTCDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  }
   const s = String(raw || "").trim();
+  // dd/mm/yyyy
   const match = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (match) {
     const [, dd, mm, yyyy] = match;
     return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
   }
-  // fallback: try as-is (ISO or other)
   return s;
 }
 
