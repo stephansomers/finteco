@@ -8,6 +8,18 @@ export interface ExcelImportResult {
   errors: string[];
 }
 
+/** Convert dd/mm/yyyy to yyyy-mm-dd for internal use */
+function parseDateDMY(raw: string): string {
+  const s = String(raw || "").trim();
+  const match = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (match) {
+    const [, dd, mm, yyyy] = match;
+    return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+  }
+  // fallback: try as-is (ISO or other)
+  return s;
+}
+
 export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
   const errors: string[] = [];
   let transactions: Transaction[] = [];
@@ -23,7 +35,7 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(txSheet);
       transactions = rows
         .map(row => ({
-          date: String(row["date"] || "").trim(),
+          date: parseDateDMY(row["date"]),
           description: String(row["description"] || "").trim(),
           category: String(row["category"] || "").trim(),
           subcategory: String(row["subcategory"] || "").trim(),
@@ -41,7 +53,7 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(divSheet);
       dividends = rows
         .map(row => ({
-          date: String(row["date"] || "").trim(),
+          date: parseDateDMY(row["date"]),
           asset: String(row["asset"] || "").trim(),
           category: String(row["category"] || "").trim(),
           value: Math.abs(parseFloat(String(row["value"] || "0"))),
@@ -57,11 +69,11 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(assetSheet);
       assets = rows
         .map(row => ({
-          institution: String(row["institution"] || "").trim(),
           date: String(row["date"] || "").trim(),
+          institution: String(row["institution"] || "").trim(),
           value: parseFloat(String(row["value"] || "0")),
         }))
-        .filter(a => a.institution && !isNaN(a.value));
+        .filter(a => a.institution && a.date && !isNaN(a.value));
     } else {
       errors.push("Sheet 'Assets' not found.");
     }
@@ -77,9 +89,9 @@ export function downloadExcelTemplate() {
 
   // Transactions sheet
   const txData = [
-    { date: "2025-01-15", description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 5000 },
-    { date: "2025-01-16", description: "Grocery Store", category: "Food", subcategory: "Groceries", type: "expense", value: 120 },
-    { date: "2025-01-17", description: "Flight to NYC", category: "Travel", subcategory: "Flights", type: "expense", value: 350 },
+    { date: "15/01/2025", description: "Salary", category: "Income", subcategory: "Salary", type: "income", value: 5000 },
+    { date: "16/01/2025", description: "Grocery Store", category: "Food", subcategory: "Groceries", type: "expense", value: 120 },
+    { date: "17/01/2025", description: "Flight to NYC", category: "Travel", subcategory: "Flights", type: "expense", value: 350 },
   ];
   const txSheet = XLSX.utils.json_to_sheet(txData);
   txSheet["!cols"] = [{ wch: 12 }, { wch: 20 }, { wch: 14 }, { wch: 14 }, { wch: 10 }, { wch: 10 }];
@@ -87,22 +99,22 @@ export function downloadExcelTemplate() {
 
   // Dividends sheet
   const divData = [
-    { date: "2025-01-15", asset: "PETR4", category: "Stocks", value: 320 },
-    { date: "2025-02-20", asset: "XPML11", category: "FIIs", value: 180 },
-    { date: "2025-03-15", asset: "VALE3", category: "Stocks", value: 450 },
+    { date: "15/01/2025", asset: "PETR4", category: "Stocks", value: 320 },
+    { date: "20/02/2025", asset: "XPML11", category: "FIIs", value: 180 },
+    { date: "15/03/2025", asset: "VALE3", category: "Stocks", value: 450 },
   ];
   const divSheet = XLSX.utils.json_to_sheet(divData);
   divSheet["!cols"] = [{ wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 }];
   XLSX.utils.book_append_sheet(wb, divSheet, "Dividends");
 
-  // Assets sheet
+  // Assets sheet (date as first column, consistent with other sheets)
   const assetData = [
-    { institution: "Bank A", date: "2025-01", value: 15000 },
-    { institution: "Bank A", date: "2025-02", value: 15500 },
-    { institution: "Broker B", date: "2025-01", value: 25000 },
+    { date: "01/2025", institution: "Bank A", value: 15000 },
+    { date: "02/2025", institution: "Bank A", value: 15500 },
+    { date: "01/2025", institution: "Broker B", value: 25000 },
   ];
   const assetSheet = XLSX.utils.json_to_sheet(assetData);
-  assetSheet["!cols"] = [{ wch: 14 }, { wch: 12 }, { wch: 12 }];
+  assetSheet["!cols"] = [{ wch: 12 }, { wch: 14 }, { wch: 12 }];
   XLSX.utils.book_append_sheet(wb, assetSheet, "Assets");
 
   XLSX.writeFile(wb, "findashboard_template.xlsx");
