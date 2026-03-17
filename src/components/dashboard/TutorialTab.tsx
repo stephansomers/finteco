@@ -2,9 +2,20 @@ import { RefObject } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  BarChart3, DollarSign, CreditCard, CalendarDays, TrendingUp,
-  FileSpreadsheet, Upload, Download, ArrowRight, Eye, PieChart, Layers,
-  ShieldCheck, Table2
+  BarChart3,
+  DollarSign,
+  CreditCard,
+  CalendarDays,
+  TrendingUp,
+  FileSpreadsheet,
+  Upload,
+  Download,
+  ArrowRight,
+  Eye,
+  PieChart,
+  Layers,
+  ShieldCheck,
+  Table2,
 } from "lucide-react";
 import { downloadExcelTemplate } from "@/lib/excel-utils";
 
@@ -15,12 +26,32 @@ interface Props {
 }
 
 const features = [
-  { icon: BarChart3, title: "Dashboard", desc: "Monthly financial summary with KPIs and interactive charts." },
+  {
+    icon: BarChart3,
+    title: "Dashboard",
+    desc: "Monthly financial summary with KPIs and interactive charts.",
+  },
   { icon: DollarSign, title: "Income", desc: "Track all your money inflows." },
-  { icon: CreditCard, title: "Expenses", desc: "Detailed spending control by category." },
-  { icon: CalendarDays, title: "Year Filter", desc: "Navigate between periods and compare years." },
-  { icon: TrendingUp, title: "Consolidated", desc: "Income and expense analysis by category." },
-  { icon: FileSpreadsheet, title: "Import / Export", desc: "Use a single Excel template to feed the system." },
+  {
+    icon: CreditCard,
+    title: "Expenses",
+    desc: "Detailed spending control by category.",
+  },
+  {
+    icon: CalendarDays,
+    title: "Year Filter",
+    desc: "Navigate between periods and compare years.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Consolidated",
+    desc: "Income and expense analysis by category.",
+  },
+  {
+    icon: FileSpreadsheet,
+    title: "Import / Export",
+    desc: "Use a single Excel template to feed the system.",
+  },
 ];
 
 const steps = [
@@ -44,7 +75,14 @@ const steps = [
 const sheetSpecs = [
   {
     name: "Transactions",
-    columns: ["date", "description", "category", "subcategory", "type", "value"],
+    columns: [
+      "date",
+      "description",
+      "category",
+      "subcategory",
+      "type",
+      "value",
+    ],
     example: "2025-01-15 | Salary | Income | Salary | income | 5000",
   },
   {
@@ -59,13 +97,18 @@ const sheetSpecs = [
   },
 ];
 
-export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) {
+export function TutorialTab({
+  onNavigate,
+  excelFileRef,
+  onExcelUpload,
+}: Props) {
   return (
     <div className="space-y-10">
       {/* Header */}
       <div className="text-center space-y-2 py-6">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          How to Use the <span className="text-primary">Financial Dashboard</span>
+          How to Use the{" "}
+          <span className="text-primary">Financial Dashboard</span>
         </h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           A quick guide to organizing your finances
@@ -79,11 +122,20 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
             <ShieldCheck className="h-6 w-6 text-primary" />
           </div>
           <div className="space-y-1">
-            <h3 className="font-semibold text-base">Your data stays with you</h3>
+            <h3 className="font-semibold text-base">
+              Your data stays with you
+            </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              All data processing happens <strong className="text-foreground">locally in your browser</strong>.
-              Your financial information is <strong className="text-foreground">never sent to any server</strong>.
-              Nothing is stored remotely — when you close the tab, the data is gone. Full privacy, zero risk.
+              All data processing happens{" "}
+              <strong className="text-foreground">
+                locally in your browser
+              </strong>
+              . Your financial information is{" "}
+              <strong className="text-foreground">
+                never sent to any server
+              </strong>
+              . Nothing is stored remotely - when you close the tab, the data is
+              gone. Full privacy, zero risk.
             </p>
           </div>
         </CardContent>
@@ -108,7 +160,7 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
                   "View monthly consolidated reports",
                   "Analyze financial progress",
                   "Monitor dividends and wealth",
-                ].map(item => (
+                ].map((item) => (
                   <li key={item} className="flex items-center gap-2">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
                     {item}
@@ -126,14 +178,46 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
           <Layers className="h-5 w-5 text-primary" /> Step by Step
         </h3>
         <div className="grid gap-4 sm:grid-cols-3">
-          {steps.map(step => (
-            <Card key={step.number} className="border-border/50 bg-card relative overflow-hidden">
+          {steps.map((step) => (
+            <Card
+              key={step.number}
+              className="border-border/50 bg-card relative overflow-hidden"
+            >
               <div className="absolute top-3 right-4 text-5xl font-black text-primary/10 leading-none select-none">
                 {step.number}
               </div>
               <CardContent className="p-6 space-y-2">
                 <h4 className="font-semibold text-base">{step.title}</h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.desc}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Features */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold flex items-center gap-2">
+          <PieChart className="h-5 w-5 text-primary" /> System Features
+        </h3>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {features.map((f) => (
+            <Card
+              key={f.title}
+              className="border-border/50 bg-card hover:border-primary/30 transition-colors"
+            >
+              <CardContent className="p-5 flex items-start gap-4">
+                <div className="rounded-lg bg-primary/10 p-2.5 shrink-0">
+                  <f.icon className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm">{f.title}</h4>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                    {f.desc}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -148,51 +232,41 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
         <Card className="border-border/50 bg-card">
           <CardContent className="p-6 sm:p-8 space-y-5">
             <p className="text-muted-foreground text-sm leading-relaxed">
-              The template is a single <strong className="text-foreground">.xlsx file</strong> with
-              <strong className="text-foreground"> 3 sheets</strong>. Each sheet has specific columns
-              that must be kept as headers in the first row:
+              The template is a single{" "}
+              <strong className="text-foreground">.xlsx file</strong> with
+              <strong className="text-foreground"> 3 sheets</strong>. Each sheet
+              has specific columns that must be kept as headers in the first
+              row:
             </p>
             <div className="grid gap-4 sm:grid-cols-3">
-              {sheetSpecs.map(spec => (
-                <Card key={spec.name} className="border-border/30 bg-secondary/50">
+              {sheetSpecs.map((spec) => (
+                <Card
+                  key={spec.name}
+                  className="border-border/30 bg-secondary/50"
+                >
                   <CardContent className="p-4 space-y-2">
-                    <h4 className="font-semibold text-sm text-primary">{spec.name}</h4>
+                    <h4 className="font-semibold text-sm text-primary">
+                      {spec.name}
+                    </h4>
                     <div className="flex flex-wrap gap-1.5">
-                      {spec.columns.map(col => (
-                        <span key={col} className="rounded bg-primary/10 px-2 py-0.5 text-xs font-mono text-primary">
+                      {spec.columns.map((col) => (
+                        <span
+                          key={col}
+                          className="rounded bg-primary/10 px-2 py-0.5 text-xs font-mono text-primary"
+                        >
                           {col}
                         </span>
                       ))}
                     </div>
-                    <p className="text-[11px] text-muted-foreground font-mono break-all">{spec.example}</p>
+                    <p className="text-[11px] text-muted-foreground font-mono break-all">
+                      {spec.example}
+                    </p>
                   </CardContent>
                 </Card>
               ))}
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Features */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold flex items-center gap-2">
-          <PieChart className="h-5 w-5 text-primary" /> System Features
-        </h3>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map(f => (
-            <Card key={f.title} className="border-border/50 bg-card hover:border-primary/30 transition-colors">
-              <CardContent className="p-5 flex items-start gap-4">
-                <div className="rounded-lg bg-primary/10 p-2.5 shrink-0">
-                  <f.icon className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-sm">{f.title}</h4>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{f.desc}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
 
       {/* Data Import */}
@@ -203,8 +277,9 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
         <Card className="border-border/50 bg-card">
           <CardContent className="p-6 sm:p-8 space-y-6">
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Download the Excel template, fill it with your financial data across the 3 sheets,
-              then upload it here. All data is processed locally in your browser.
+              Download the Excel template, fill it with your financial data
+              across the 3 sheets, then upload it here. All data is processed
+              locally in your browser.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <input
