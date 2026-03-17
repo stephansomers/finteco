@@ -77,7 +77,7 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(assetSheet);
       assets = rows
         .map(row => ({
-          date: String(row["date"] || "").trim(),
+          date: parseDateValue(row["date"]),
           institution: String(row["institution"] || "").trim(),
           value: parseFloat(String(row["value"] || "0")),
         }))

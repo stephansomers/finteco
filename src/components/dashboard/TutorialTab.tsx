@@ -93,7 +93,7 @@ const sheetSpecs = [
   {
     name: "Assets",
     columns: ["date", "institution", "value"],
-    example: "01/2025 | Bank A | 15000",
+    example: "31/01/2025 | Bank A | 15000",
   },
 ];
 
