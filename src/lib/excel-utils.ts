@@ -43,7 +43,7 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(txSheet);
       transactions = rows
         .map(row => ({
-          date: parseDateDMY(row["date"]),
+          date: parseDateValue(row["date"]),
           description: String(row["description"] || "").trim(),
           category: String(row["category"] || "").trim(),
           subcategory: String(row["subcategory"] || "").trim(),
