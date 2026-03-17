@@ -83,17 +83,17 @@ const sheetSpecs = [
       "type",
       "value",
     ],
-    example: "2025-01-15 | Salary | Income | Salary | income | 5000",
+    example: "15/01/2025 | Salary | Income | Salary | income | 5000",
   },
   {
     name: "Dividends",
     columns: ["date", "asset", "category", "value"],
-    example: "2025-01-15 | PETR4 | Stocks | 320",
+    example: "15/01/2025 | PETR4 | Stocks | 320",
   },
   {
     name: "Assets",
-    columns: ["institution", "date", "value"],
-    example: "Bank A | 2025-01 | 15000",
+    columns: ["date", "institution", "value"],
+    example: "01/2025 | Bank A | 15000",
   },
 ];
 
