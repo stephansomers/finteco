@@ -2,7 +2,7 @@ import { useState, useMemo, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Transaction, AssetSnapshot, DividendEntry } from "@/lib/types";
-import { parseTransactionCSV, parseAssetCSV, parseDividendCSV } from "@/lib/csv-utils";
+import { parseExcelFile } from "@/lib/excel-utils";
 import { MOCK_TRANSACTIONS, MOCK_DIVIDENDS, MOCK_ASSETS } from "@/lib/mock-data";
 import { KpiCards } from "@/components/dashboard/KpiCards";
 import { ExpenseDonutChart } from "@/components/dashboard/ExpenseDonutChart";
@@ -14,6 +14,7 @@ import { WealthTracker } from "@/components/dashboard/WealthTracker";
 import { LoansTab } from "@/components/dashboard/LoansTab";
 import { DividendsTab } from "@/components/dashboard/DividendsTab";
 import { TutorialTab } from "@/components/dashboard/TutorialTab";
+import { toast } from "sonner";
 
 const currentYear = new Date().getFullYear();
 
@@ -23,10 +24,8 @@ const Index = () => {
   const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
   const [txYear, setTxYear] = useState(currentYear.toString());
   const [wealthYear, setWealthYear] = useState("all");
-  const [activeTab, setActiveTab] = useState("transactions");
-  const txFileRef = useRef<HTMLInputElement>(null);
-  const assetFileRef = useRef<HTMLInputElement>(null);
-  const divFileRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState("tutorial");
+  const excelFileRef = useRef<HTMLInputElement>(null);
 
   const txYears = useMemo(() => {
     const yrs = transactions.map(t => new Date(t.date).getFullYear());
@@ -61,39 +60,54 @@ const Index = () => {
     });
   }, [assets, wealthYear]);
 
-  const handleTxUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const parsed = parseTransactionCSV(ev.target?.result as string);
-      setTransactions(prev => [...prev, ...parsed]);
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  };
 
-  const handleAssetUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
     const reader = new FileReader();
-    reader.onload = ev => {
-      const parsed = parseAssetCSV(ev.target?.result as string);
-      setAssets(prev => [...prev, ...parsed]);
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  };
+    reader.onload = (ev) => {
+      try {
+        const data = ev.target?.result as ArrayBuffer;
+        const result = parseExcelFile(data);
 
-  const handleDivUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const parsed = parseDividendCSV(ev.target?.result as string);
-      setDividends(prev => [...prev, ...parsed]);
+        const loaded: string[] = [];
+        if (result.transactions.length > 0) {
+          setTransactions(prev => [...prev, ...result.transactions]);
+          loaded.push(`${result.transactions.length} transactions`);
+        }
+        if (result.dividends.length > 0) {
+          setDividends(prev => [...prev, ...result.dividends]);
+          loaded.push(`${result.dividends.length} dividends`);
+        }
+        if (result.assets.length > 0) {
+          setAssets(prev => [...prev, ...result.assets]);
+          loaded.push(`${result.assets.length} assets`);
+        }
+
+        if (loaded.length > 0) {
+          toast.success("Data imported successfully", {
+            description: `Loaded ${loaded.join(", ")}.`,
+          });
+        }
+
+        if (result.errors.length > 0) {
+          toast.error("Import warnings", {
+            description: result.errors.join(" "),
+          });
+        }
+
+        if (loaded.length === 0 && result.errors.length === 0) {
+          toast.error("No data found", {
+            description: "The file was read but no valid rows were found. Please check the template format.",
+          });
+        }
+      } catch {
+        toast.error("Invalid file", {
+          description: "Could not read the file. Please upload a valid .xlsx Excel file.",
+        });
+      }
     };
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
     e.target.value = "";
   };
 
@@ -134,12 +148,8 @@ const Index = () => {
           <TabsContent value="tutorial" className="mt-6">
             <TutorialTab
               onNavigate={setActiveTab}
-              txFileRef={txFileRef}
-              assetFileRef={assetFileRef}
-              divFileRef={divFileRef}
-              onTxUpload={handleTxUpload}
-              onAssetUpload={handleAssetUpload}
-              onDivUpload={handleDivUpload}
+              excelFileRef={excelFileRef}
+              onExcelUpload={handleExcelUpload}
             />
           </TabsContent>
 
