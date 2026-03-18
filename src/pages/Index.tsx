@@ -14,11 +14,15 @@ import { WealthTracker } from "@/components/dashboard/WealthTracker";
 import { LoansTab } from "@/components/dashboard/LoansTab";
 import { DividendsTab } from "@/components/dashboard/DividendsTab";
 import { TutorialTab } from "@/components/dashboard/TutorialTab";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 import { toast } from "sonner";
+import { extractYear } from "@/lib/date-utils";
 
 const currentYear = new Date().getFullYear();
 
 const Index = () => {
+  const { t } = useI18n();
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>(MOCK_ASSETS);
   const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
@@ -33,10 +37,7 @@ const Index = () => {
   }, [transactions]);
 
   const wealthYears = useMemo(() => {
-    const yrs = assets.map(a => {
-      const parts = a.date.split("/");
-      return parseInt(parts.length === 3 ? parts[2] : parts[1]);
-    });
+    const yrs = assets.map(a => extractYear(a.date)).filter(y => !isNaN(y));
     return [...new Set(yrs)].sort((a, b) => b - a);
   }, [assets]);
 
@@ -53,11 +54,7 @@ const Index = () => {
 
   const filteredAssets = useMemo(() => {
     if (wealthYear === "all") return assets;
-    return assets.filter(a => {
-      const parts = a.date.split("/");
-      const yr = parseInt(parts.length === 3 ? parts[2] : parts[1]);
-      return yr === parseInt(wealthYear);
-    });
+    return assets.filter(a => extractYear(a.date) === parseInt(wealthYear));
   }, [assets, wealthYear]);
 
   const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,37 +70,37 @@ const Index = () => {
         const loaded: string[] = [];
         if (result.transactions.length > 0) {
           setTransactions(result.transactions);
-          loaded.push(`${result.transactions.length} transactions`);
+          loaded.push(`${result.transactions.length} ${t("toast.transactions")}`);
         }
         if (result.dividends.length > 0) {
           setDividends(result.dividends);
-          loaded.push(`${result.dividends.length} dividends`);
+          loaded.push(`${result.dividends.length} ${t("toast.dividends")}`);
         }
         if (result.assets.length > 0) {
           setAssets(result.assets);
-          loaded.push(`${result.assets.length} assets`);
+          loaded.push(`${result.assets.length} ${t("toast.assets")}`);
         }
 
         if (loaded.length > 0) {
-          toast.success("Data imported successfully", {
-            description: `Loaded ${loaded.join(", ")}.`,
+          toast.success(t("toast.success"), {
+            description: `${t("toast.loaded")} ${loaded.join(", ")}.`,
           });
         }
 
         if (result.errors.length > 0) {
-          toast.error("Import warnings", {
+          toast.error(t("toast.warnings"), {
             description: result.errors.join(" "),
           });
         }
 
         if (loaded.length === 0 && result.errors.length === 0) {
-          toast.error("No data found", {
-            description: "The file was read but no valid rows were found. Please check the template format.",
+          toast.error(t("toast.noData"), {
+            description: t("toast.noDataDesc"),
           });
         }
       } catch {
-        toast.error("Invalid file", {
-          description: "Could not read the file. Please upload a valid .xlsx Excel file.",
+        toast.error(t("toast.invalidFile"), {
+          description: t("toast.invalidFileDesc"),
         });
       }
     };
@@ -113,11 +110,11 @@ const Index = () => {
 
   const YearFilter = ({ value, onChange, years }: { value: string; onChange: (v: string) => void; years: number[] }) => (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
+      <SelectTrigger className="w-[140px] border-border/50 bg-secondary">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All Years</SelectItem>
+        <SelectItem value="all">{t("filter.allYears")}</SelectItem>
         {years.map(y => (
           <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
         ))}
@@ -128,21 +125,22 @@ const Index = () => {
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
-        <div className="mx-auto flex max-w-[1800px] items-center px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-[1800px] items-center justify-between px-4 py-3 sm:px-6">
           <h1 className="text-lg font-bold tracking-tight">
             <span className="text-primary">Fin</span>Dashboard
           </h1>
+          <LanguageSwitcher />
         </div>
       </header>
 
       <main className="mx-auto max-w-[1800px] px-4 py-6 sm:px-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-secondary w-full justify-start">
-            <TabsTrigger value="tutorial">How to Use</TabsTrigger>
-            <TabsTrigger value="transactions">Transactions</TabsTrigger>
-            <TabsTrigger value="loans">Loans</TabsTrigger>
-            <TabsTrigger value="dividends">Dividends</TabsTrigger>
-            <TabsTrigger value="wealth">Wealth Tracker</TabsTrigger>
+            <TabsTrigger value="tutorial">{t("tab.tutorial")}</TabsTrigger>
+            <TabsTrigger value="transactions">{t("tab.transactions")}</TabsTrigger>
+            <TabsTrigger value="loans">{t("tab.loans")}</TabsTrigger>
+            <TabsTrigger value="dividends">{t("tab.dividends")}</TabsTrigger>
+            <TabsTrigger value="wealth">{t("tab.wealth")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="tutorial" className="mt-6">

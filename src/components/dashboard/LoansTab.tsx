@@ -6,7 +6,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { Transaction } from "@/lib/types";
-import { formatCurrency, formatNumber, getMonthName } from "@/lib/csv-utils";
+import { formatCurrency, formatNumber } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   transactions: Transaction[];
@@ -35,6 +36,7 @@ function isLoanTx(t: Transaction) {
 }
 
 export function LoansTab({ transactions, year }: Props) {
+  const { t, tMonth } = useI18n();
   const [loanYear, setLoanYear] = useState<string>(year.toString());
   const [sortField, setSortField] = useState<"date" | "description" | "category" | "value">("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
@@ -100,18 +102,17 @@ export function LoansTab({ transactions, year }: Props) {
     color: "hsl(210, 40%, 96%)",
   };
 
-  const selectedLabel = loanYear === "all" ? "All Years" : loanYear;
+  const selectedLabel = loanYear === "all" ? t("filter.allYears") : loanYear;
 
   return (
     <div className="space-y-6">
-      {/* Year Filter */}
       <div className="flex items-center justify-end gap-2">
         <Select value={loanYear} onValueChange={setLoanYear}>
-          <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
+          <SelectTrigger className="w-[140px] border-border/50 bg-secondary">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Years</SelectItem>
+            <SelectItem value="all">{t("filter.allYears")}</SelectItem>
             {loanYears.map(y => (
               <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
             ))}
@@ -119,12 +120,11 @@ export function LoansTab({ transactions, year }: Props) {
         </Select>
       </div>
 
-      {/* Annual Summary */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
-          { label: "Total Lent", value: totalLent, color: "text-chart-expense" },
-          { label: "Total Repaid", value: totalRepaid, color: "text-chart-income" },
-          { label: "Outstanding Balance", value: outstanding, color: outstanding >= 0 ? "text-chart-income" : "text-chart-expense" },
+          { label: t("loans.totalLent"), value: totalLent, color: "text-chart-expense" },
+          { label: t("loans.totalRepaid"), value: totalRepaid, color: "text-chart-income" },
+          { label: t("loans.outstanding"), value: outstanding, color: outstanding >= 0 ? "text-chart-income" : "text-chart-expense" },
         ].map(({ label, value, color }) => (
           <Card key={label} className="border-border/50 bg-card">
             <CardContent className="p-5">
@@ -135,18 +135,17 @@ export function LoansTab({ transactions, year }: Props) {
         ))}
       </div>
 
-      {/* Monthly Consolidated Table */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Monthly Consolidated</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">{t("loans.monthlyConsolidated")}</CardTitle></CardHeader>
         <CardContent className="overflow-x-auto scrollbar-thin">
           <Table>
             <TableHeader>
               <TableRow className="border-border/50">
-                <TableHead className="sticky left-0 bg-card">Category</TableHead>
+                <TableHead className="sticky left-0 bg-card">{t("loans.category")}</TableHead>
                 {Array.from({ length: 12 }, (_, i) => (
-                  <TableHead key={i} className="text-right">{getMonthName(i)}</TableHead>
+                  <TableHead key={i} className="text-right">{tMonth(i)}</TableHead>
                 ))}
-                <TableHead className="text-right font-bold">Total</TableHead>
+                <TableHead className="text-right font-bold">{t("loans.total")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -171,7 +170,7 @@ export function LoansTab({ transactions, year }: Props) {
                 );
               })}
               <TableRow className="border-border/50 bg-secondary/50">
-                <TableCell className="sticky left-0 bg-secondary/50 font-bold">TOTAL</TableCell>
+                <TableCell className="sticky left-0 bg-secondary/50 font-bold">{t("loans.TOTAL")}</TableCell>
                 {Array.from({ length: 12 }, (_, i) => {
                   const total = categories.reduce((s, cat) => s + getMonthlyValue(cat, i), 0);
                   return (
@@ -189,23 +188,22 @@ export function LoansTab({ transactions, year }: Props) {
         </CardContent>
       </Card>
 
-      {/* Person Consolidation & Chart */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Consolidated by Person</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm font-medium">{t("loans.byPerson")}</CardTitle></CardHeader>
           <CardContent className="p-0">
             <Table>
               <TableHeader>
                 <TableRow className="border-border/50">
-                  <TableHead className="pl-6">Person</TableHead>
-                  <TableHead className="text-right">Lent</TableHead>
-                  <TableHead className="text-right">Repaid</TableHead>
-                  <TableHead className="text-right pr-6">Balance</TableHead>
+                  <TableHead className="pl-6">{t("loans.person")}</TableHead>
+                  <TableHead className="text-right">{t("loans.lent")}</TableHead>
+                  <TableHead className="text-right">{t("loans.repaid")}</TableHead>
+                  <TableHead className="text-right pr-6">{t("loans.balance")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {personData.length === 0 ? (
-                  <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No loan data</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">{t("loans.noData")}</TableCell></TableRow>
                 ) : personData.map((p, idx) => (
                   <TableRow key={p.name} className={`border-border/50 ${idx % 2 === 0 ? "bg-secondary/20" : ""}`}>
                     <TableCell className="pl-6 font-medium">{p.name}</TableCell>
@@ -218,7 +216,7 @@ export function LoansTab({ transactions, year }: Props) {
                 ))}
                 {personData.length > 0 && (
                   <TableRow className="border-border/50 bg-secondary/50">
-                    <TableCell className="pl-6 font-bold">Total</TableCell>
+                    <TableCell className="pl-6 font-bold">{t("loans.total")}</TableCell>
                     <TableCell className="text-right font-bold text-chart-expense">{formatCurrency(totalLent)}</TableCell>
                     <TableCell className="text-right font-bold text-chart-income">{formatCurrency(totalRepaid)}</TableCell>
                     <TableCell className={`text-right pr-6 font-bold ${outstanding >= 0 ? "text-chart-income" : "text-chart-expense"}`}>
@@ -232,7 +230,7 @@ export function LoansTab({ transactions, year }: Props) {
         </Card>
 
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Loans by Person</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm font-medium">{t("loans.chartTitle")}</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
@@ -242,8 +240,8 @@ export function LoansTab({ transactions, year }: Props) {
                   <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
                   <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={tooltipStyle} />
                   <Legend />
-                  <Bar dataKey="lent" name="Lent" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="repaid" name="Repaid" fill="hsl(160, 84%, 39%)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="lent" name={t("loans.lent")} fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="repaid" name={t("loans.repaid")} fill="hsl(160, 84%, 39%)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -251,12 +249,11 @@ export function LoansTab({ transactions, year }: Props) {
         </Card>
       </div>
 
-      {/* Transactions Table - Collapsible */}
       <Card className="border-border/50 bg-card">
         <Collapsible open={txTableOpen} onOpenChange={setTxTableOpen}>
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-medium">Loan Transactions — {selectedLabel}</CardTitle>
+              <CardTitle className="text-sm font-medium">{t("loans.txTitle")} — {selectedLabel}</CardTitle>
               <CollapsibleTrigger className="rounded-md p-1 hover:bg-secondary">
                 <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${txTableOpen ? "rotate-180" : ""}`} />
               </CollapsibleTrigger>
@@ -268,29 +265,29 @@ export function LoansTab({ transactions, year }: Props) {
                 <TableHeader>
                   <TableRow className="border-border/50">
                     <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("date")}>
-                      Date <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                      {t("tx.date")} <ArrowUpDown className="ml-1 inline h-3 w-3" />
                     </TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("description")}>
-                      Description <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                      {t("tx.description")} <ArrowUpDown className="ml-1 inline h-3 w-3" />
                     </TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("category")}>
-                      Category <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                      {t("tx.category")} <ArrowUpDown className="ml-1 inline h-3 w-3" />
                     </TableHead>
                     <TableHead className="cursor-pointer select-none text-right" onClick={() => toggleSort("value")}>
-                      Value <ArrowUpDown className="ml-1 inline h-3 w-3" />
+                      {t("tx.value")} <ArrowUpDown className="ml-1 inline h-3 w-3" />
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {sortedLoanTx.length === 0 ? (
-                    <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">No loan transactions</TableCell></TableRow>
-                  ) : sortedLoanTx.map((t, i) => (
+                    <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground">{t("loans.noTx")}</TableCell></TableRow>
+                  ) : sortedLoanTx.map((tx, i) => (
                     <TableRow key={i} className="border-border/50">
-                      <TableCell className="text-muted-foreground">{t.date}</TableCell>
-                      <TableCell>{t.description}</TableCell>
-                      <TableCell>{t.category}</TableCell>
-                      <TableCell className={`text-right font-medium ${isRepayment(t) ? "text-chart-income" : "text-chart-expense"}`}>
-                        {isRepayment(t) ? "+" : "-"}{formatCurrency(t.value)}
+                      <TableCell className="text-muted-foreground">{tx.date}</TableCell>
+                      <TableCell>{tx.description}</TableCell>
+                      <TableCell>{tx.category}</TableCell>
+                      <TableCell className={`text-right font-medium ${isRepayment(tx) ? "text-chart-income" : "text-chart-expense"}`}>
+                        {isRepayment(tx) ? "+" : "-"}{formatCurrency(tx.value)}
                       </TableCell>
                     </TableRow>
                   ))}

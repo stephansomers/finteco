@@ -2,6 +2,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 const COLORS = [
   "hsl(160, 84%, 39%)", "hsl(210, 100%, 52%)", "hsl(47, 100%, 50%)",
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export function IncomeDonutChart({ transactions }: Props) {
+  const { t } = useI18n();
   const incomes = transactions.filter(t => t.type === "income");
   const grouped = incomes.reduce<Record<string, number>>((acc, t) => {
     acc[t.subcategory || t.category] = (acc[t.subcategory || t.category] || 0) + t.value;
@@ -27,15 +29,15 @@ export function IncomeDonutChart({ transactions }: Props) {
   if (!data.length) {
     return (
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Income by Category</CardTitle></CardHeader>
-        <CardContent className="flex h-[250px] items-center justify-center text-muted-foreground">No data</CardContent>
+        <CardHeader><CardTitle className="text-sm font-medium">{t("income.byCategory")}</CardTitle></CardHeader>
+        <CardContent className="flex h-[250px] items-center justify-center text-muted-foreground">{t("chart.noData")}</CardContent>
       </Card>
     );
   }
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Income by Category</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">{t("income.byCategory")}</CardTitle></CardHeader>
       <CardContent>
         <div className="h-[250px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -45,16 +47,7 @@ export function IncomeDonutChart({ transactions }: Props) {
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip
-                formatter={(v: number) => formatCurrency(v)}
-                contentStyle={{
-                  backgroundColor: "hsl(224, 28%, 10%)",
-                  border: "1px solid hsl(220, 20%, 18%)",
-                  borderRadius: "8px",
-                  color: "hsl(210, 40%, 96%)",
-                }}
-                itemStyle={{ color: "hsl(210, 40%, 96%)" }}
-              />
+              <Tooltip formatter={(v: number) => formatCurrency(v)} contentStyle={{ backgroundColor: "hsl(224, 28%, 10%)", border: "1px solid hsl(220, 20%, 18%)", borderRadius: "8px", color: "hsl(210, 40%, 96%)" }} itemStyle={{ color: "hsl(210, 40%, 96%)" }} />
             </PieChart>
           </ResponsiveContainer>
         </div>

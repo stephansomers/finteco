@@ -1,7 +1,8 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/lib/types";
-import { getMonthName, formatCurrency } from "@/lib/csv-utils";
+import { formatCurrency } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   transactions: Transaction[];
@@ -9,18 +10,19 @@ interface Props {
 }
 
 export function BalanceTrendChart({ transactions, year }: Props) {
+  const { t, tMonth } = useI18n();
   const yearTx = year ? transactions.filter(t => new Date(t.date).getFullYear() === year) : transactions;
   
   const data = Array.from({ length: 12 }, (_, i) => {
     const monthTx = yearTx.filter(t => new Date(t.date).getMonth() === i);
     const income = monthTx.filter(t => t.type === "income").reduce((s, t) => s + t.value, 0);
     const expense = monthTx.filter(t => t.type === "expense").reduce((s, t) => s + t.value, 0);
-    return { month: getMonthName(i), balance: income - expense };
+    return { month: tMonth(i), balance: income - expense };
   });
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Balance Trend{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">{t("balance.title")}{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
       <CardContent>
         <div className="h-[250px]">
           <ResponsiveContainer width="100%" height="100%">

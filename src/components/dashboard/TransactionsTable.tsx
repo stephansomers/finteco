@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowUpDown, ChevronDown } from "lucide-react";
 import { Transaction } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   transactions: Transaction[];
@@ -15,12 +16,8 @@ interface Props {
 type SortField = "date" | "value" | "description" | "category" | "subcategory";
 type SortDirection = "asc" | "desc";
 
-const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-
 export function TransactionsTable({ transactions, year }: Props) {
+  const { t, tMonthFull } = useI18n();
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDir, setSortDir] = useState<SortDirection>("desc");
   const [month, setMonth] = useState<string>("all");
@@ -57,7 +54,7 @@ export function TransactionsTable({ transactions, year }: Props) {
       <Collapsible open={tableOpen} onOpenChange={setTableOpen}>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
-            <CardTitle className="text-sm font-medium">Transactions</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("tx.title")}</CardTitle>
             <CollapsibleTrigger className="rounded-md p-1 hover:bg-secondary">
               <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${tableOpen ? "rotate-180" : ""}`} />
             </CollapsibleTrigger>
@@ -67,9 +64,9 @@ export function TransactionsTable({ transactions, year }: Props) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Months</SelectItem>
-              {months.map((m, i) => (
-                <SelectItem key={i} value={i.toString()}>{m}</SelectItem>
+              <SelectItem value="all">{t("filter.allMonths")}</SelectItem>
+              {Array.from({ length: 12 }, (_, i) => (
+                <SelectItem key={i} value={i.toString()}>{tMonthFull(i)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -79,16 +76,16 @@ export function TransactionsTable({ transactions, year }: Props) {
             <Table>
               <TableHeader>
                 <TableRow className="border-border/50">
-                  <SortHeader field="date">Date</SortHeader>
-                  <SortHeader field="description">Description</SortHeader>
-                  <SortHeader field="category">Category</SortHeader>
-                  <SortHeader field="subcategory">Subcategory</SortHeader>
-                  <SortHeader field="value" className="text-right">Value</SortHeader>
+                  <SortHeader field="date">{t("tx.date")}</SortHeader>
+                  <SortHeader field="description">{t("tx.description")}</SortHeader>
+                  <SortHeader field="category">{t("tx.category")}</SortHeader>
+                  <SortHeader field="subcategory">{t("tx.subcategory")}</SortHeader>
+                  <SortHeader field="value" className="text-right">{t("tx.value")}</SortHeader>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {sorted.length === 0 ? (
-                  <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground">No transactions</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground">{t("tx.noData")}</TableCell></TableRow>
                 ) : sorted.map((t, i) => (
                   <TableRow key={i} className="border-border/50">
                     <TableCell className="text-muted-foreground">{t.date}</TableCell>
