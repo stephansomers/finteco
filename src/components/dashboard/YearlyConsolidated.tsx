@@ -2,7 +2,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/lib/types";
-import { formatNumber, getMonthName } from "@/lib/csv-utils";
+import { formatNumber } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   transactions: Transaction[];
@@ -10,11 +11,11 @@ interface Props {
 }
 
 export function YearlyConsolidated({ transactions, year }: Props) {
+  const { t, tMonth } = useI18n();
   const yearTx = year
     ? transactions.filter(t => new Date(t.date).getFullYear() === year)
     : transactions;
 
-  // Separate income and expense subcategories, incomes first
   const incomeSubcategories = [...new Set(yearTx.filter(t => t.type === "income").map(t => t.subcategory))].sort();
   const expenseSubcategories = [...new Set(yearTx.filter(t => t.type === "expense").map(t => t.subcategory))].sort();
   const subcategories = [...incomeSubcategories, ...expenseSubcategories].filter((v, i, a) => a.indexOf(v) === i);
@@ -26,20 +27,20 @@ export function YearlyConsolidated({ transactions, year }: Props) {
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Yearly Consolidated{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">{t("consolidated.title")}{year ? ` — ${year}` : ""}</CardTitle></CardHeader>
       <CardContent>
         <Accordion type="single" collapsible>
           <AccordionItem value="consolidated" className="border-border/50">
-            <AccordionTrigger className="text-sm">View Breakdown by Subcategory</AccordionTrigger>
+            <AccordionTrigger className="text-sm">{t("consolidated.breakdown")}</AccordionTrigger>
             <AccordionContent className="overflow-x-auto scrollbar-thin">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50">
-                    <TableHead className="sticky left-0 bg-card">Subcategory</TableHead>
+                    <TableHead className="sticky left-0 bg-card">{t("consolidated.subcategory")}</TableHead>
                     {Array.from({ length: 12 }, (_, i) => (
-                      <TableHead key={i} className="text-right">{getMonthName(i)}</TableHead>
+                      <TableHead key={i} className="text-right">{tMonth(i)}</TableHead>
                     ))}
-                    <TableHead className="text-right font-bold">Total</TableHead>
+                    <TableHead className="text-right font-bold">{t("consolidated.total")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

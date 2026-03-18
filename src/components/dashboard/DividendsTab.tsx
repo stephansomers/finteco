@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { DividendEntry } from "@/lib/types";
-import { formatCurrency, getMonthName } from "@/lib/csv-utils";
+import { formatCurrency } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 const COLORS = [
   "hsl(210, 100%, 52%)", "hsl(160, 84%, 39%)", "hsl(47, 100%, 50%)",
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function DividendsTab({ dividends, year }: Props) {
+  const { t, tMonth } = useI18n();
   const [divYear, setDivYear] = useState<string>(year.toString());
 
   const divYears = useMemo(() => {
@@ -40,9 +42,9 @@ export function DividendsTab({ dividends, year }: Props) {
     let cumulative = 0;
     return Array.from({ length: 12 }, (_, i) => {
       cumulative += monthly[i] || 0;
-      return { month: getMonthName(i), value: monthly[i] || 0, cumulative };
+      return { month: tMonth(i), value: monthly[i] || 0, cumulative };
     }).filter(d => d.cumulative > 0 || d.value > 0);
-  }, [filteredDividends]);
+  }, [filteredDividends, tMonth]);
 
   const allocationByAsset = useMemo(() => {
     const map: Record<string, number> = {};
@@ -71,18 +73,17 @@ export function DividendsTab({ dividends, year }: Props) {
     color: "hsl(210, 40%, 96%)",
   };
 
-  const selectedLabel = divYear === "all" ? "All Years" : divYear;
+  const selectedLabel = divYear === "all" ? t("filter.allYears") : divYear;
 
   return (
     <div className="space-y-6">
-      {/* Year filter only */}
       <div className="flex flex-wrap items-center justify-end gap-2">
         <Select value={divYear} onValueChange={setDivYear}>
-          <SelectTrigger className="w-[120px] border-border/50 bg-secondary">
+          <SelectTrigger className="w-[140px] border-border/50 bg-secondary">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Years</SelectItem>
+            <SelectItem value="all">{t("filter.allYears")}</SelectItem>
             {divYears.map(y => (
               <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
             ))}
@@ -90,23 +91,22 @@ export function DividendsTab({ dividends, year }: Props) {
         </Select>
       </div>
 
-      {/* KPI */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card className="border-border/50 bg-card">
           <CardContent className="p-5">
-            <p className="text-sm text-muted-foreground">Total Dividends ({selectedLabel})</p>
+            <p className="text-sm text-muted-foreground">{t("div.total")} ({selectedLabel})</p>
             <p className="text-2xl font-bold text-chart-income">{formatCurrency(totalDividends)}</p>
           </CardContent>
         </Card>
         <Card className="border-border/50 bg-card">
           <CardContent className="p-5">
-            <p className="text-sm text-muted-foreground">Unique Assets</p>
+            <p className="text-sm text-muted-foreground">{t("div.uniqueAssets")}</p>
             <p className="text-2xl font-bold text-primary">{allocationByAsset.length}</p>
           </CardContent>
         </Card>
         <Card className="border-border/50 bg-card">
           <CardContent className="p-5">
-            <p className="text-sm text-muted-foreground">Monthly Average</p>
+            <p className="text-sm text-muted-foreground">{t("div.monthlyAvg")}</p>
             <p className="text-2xl font-bold text-chart-balance">
               {formatCurrency(growthData.length > 0 ? totalDividends / growthData.length : 0)}
             </p>
@@ -114,9 +114,8 @@ export function DividendsTab({ dividends, year }: Props) {
         </Card>
       </div>
 
-      {/* Dividend Growth Chart */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Dividend Growth — {selectedLabel}</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">{t("div.growth")} — {selectedLabel}</CardTitle></CardHeader>
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -125,24 +124,23 @@ export function DividendsTab({ dividends, year }: Props) {
                 <XAxis dataKey="month" stroke="hsl(215, 20%, 55%)" fontSize={12} />
                 <YAxis stroke="hsl(215, 20%, 55%)" fontSize={12} tickFormatter={v => `${(v / 1000).toFixed(1)}k`} />
                 <Tooltip
-                  formatter={(v: number, name: string) => [formatCurrency(v), name === "cumulative" ? "Total" : "Monthly"]}
+                  formatter={(v: number, name: string) => [formatCurrency(v), name === "cumulative" ? t("div.cumulative") : t("div.monthly")]}
                   contentStyle={tooltipStyle}
                 />
-                <Line type="monotone" dataKey="value" name="Monthly" stroke="hsl(210, 100%, 52%)" strokeWidth={2} dot={{ r: 4 }} />
-                <Line type="monotone" dataKey="cumulative" name="Cumulative" stroke="hsl(160, 84%, 39%)" strokeWidth={2} strokeDasharray="5 5" dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="value" name={t("div.monthly")} stroke="hsl(210, 100%, 52%)" strokeWidth={2} dot={{ r: 4 }} />
+                <Line type="monotone" dataKey="cumulative" name={t("div.cumulative")} stroke="hsl(160, 84%, 39%)" strokeWidth={2} strokeDasharray="5 5" dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>
 
-      {/* Allocation Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Dividends by Asset</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm font-medium">{t("div.byAsset")}</CardTitle></CardHeader>
           <CardContent>
             {allocationByAsset.length === 0 ? (
-              <div className="flex h-[250px] items-center justify-center text-muted-foreground">No data</div>
+              <div className="flex h-[250px] items-center justify-center text-muted-foreground">{t("chart.noData")}</div>
             ) : (
               <>
                 <div className="h-[250px]">
@@ -171,10 +169,10 @@ export function DividendsTab({ dividends, year }: Props) {
         </Card>
 
         <Card className="border-border/50 bg-card">
-          <CardHeader><CardTitle className="text-sm font-medium">Dividends per Category</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="text-sm font-medium">{t("div.byCategory")}</CardTitle></CardHeader>
           <CardContent>
             {allocationByCategory.length === 0 ? (
-              <div className="flex h-[250px] items-center justify-center text-muted-foreground">No data</div>
+              <div className="flex h-[250px] items-center justify-center text-muted-foreground">{t("chart.noData")}</div>
             ) : (
               <>
                 <div className="h-[250px]">

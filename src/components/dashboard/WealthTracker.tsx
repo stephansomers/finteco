@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { ChevronDown } from "lucide-react";
 import { AssetSnapshot } from "@/lib/types";
 import { formatCurrency, formatNumber } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 const COLORS = [
   "hsl(210, 100%, 52%)", "hsl(160, 84%, 39%)", "hsl(47, 100%, 50%)",
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function WealthTracker({ assets }: Props) {
+  const { t } = useI18n();
   const [tableOpen, setTableOpen] = useState(true);
   const institutions = [...new Set(assets.map(a => a.institution))];
   const periods = [...new Set(assets.map(a => a.date))].sort();
@@ -32,7 +34,6 @@ export function WealthTracker({ assets }: Props) {
     return ((curr - prev) / prev) * 100;
   };
 
-  // Total variation row
   const getTotalVariation = (periodIdx: number) => {
     if (periodIdx === 0) return null;
     const currTotal = institutions.reduce((s, inst) => s + (getValue(inst, periods[periodIdx]) ?? 0), 0);
@@ -57,11 +58,10 @@ export function WealthTracker({ assets }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Assets Table - Collapsible */}
       <Card className="border-border/50 bg-card">
         <Collapsible open={tableOpen} onOpenChange={setTableOpen}>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium">Assets by Institution</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("wealth.assetsByInst")}</CardTitle>
             <CollapsibleTrigger className="rounded-md p-1 hover:bg-secondary">
               <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${tableOpen ? "rotate-180" : ""}`} />
             </CollapsibleTrigger>
@@ -71,7 +71,7 @@ export function WealthTracker({ assets }: Props) {
               <Table>
                 <TableHeader>
                   <TableRow className="border-border/50">
-                    <TableHead className="sticky left-0 bg-card">Institution</TableHead>
+                    <TableHead className="sticky left-0 bg-card">{t("wealth.institution")}</TableHead>
                     {periods.map(p => (
                       <TableHead key={p} className="text-right">{p}</TableHead>
                     ))}
@@ -97,9 +97,8 @@ export function WealthTracker({ assets }: Props) {
                       })}
                     </TableRow>
                   ))}
-                  {/* Total row with percentage variation */}
                   <TableRow className="border-border/50 bg-secondary/50">
-                    <TableCell className="sticky left-0 bg-secondary/50 font-bold">Total</TableCell>
+                    <TableCell className="sticky left-0 bg-secondary/50 font-bold">{t("wealth.total")}</TableCell>
                     {periods.map((p, pi) => {
                       const total = institutions.reduce((s, inst) => s + (getValue(inst, p) ?? 0), 0);
                       const variation = getTotalVariation(pi);
@@ -122,9 +121,8 @@ export function WealthTracker({ assets }: Props) {
         </Collapsible>
       </Card>
 
-      {/* Charts stacked vertically */}
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Total Wealth Evolution</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">{t("wealth.totalEvolution")}</CardTitle></CardHeader>
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -141,7 +139,7 @@ export function WealthTracker({ assets }: Props) {
       </Card>
 
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Wealth by Institution</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-sm font-medium">{t("wealth.byInstitution")}</CardTitle></CardHeader>
         <CardContent>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">

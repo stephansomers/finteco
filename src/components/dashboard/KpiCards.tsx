@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { DollarSign, TrendingDown, Plane, Wallet } from "lucide-react";
 import { formatCurrency } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 interface KpiCardsProps {
   revenue: number;
@@ -9,14 +10,14 @@ interface KpiCardsProps {
   balance: number;
 }
 
-const kpiConfig = [
-  { key: "revenue", label: "Revenue", icon: DollarSign, colorClass: "text-chart-income" },
-  { key: "expenses", label: "Expenses", icon: TrendingDown, colorClass: "text-chart-expense" },
-  { key: "travel", label: "Travel", icon: Plane, colorClass: "text-chart-travel" },
-  { key: "balance", label: "Balance", icon: Wallet, colorClass: "text-chart-balance" },
-] as const;
-
 export function KpiCards({ revenue, expenses, travel, balance }: KpiCardsProps) {
+  const { t } = useI18n();
+  const kpiConfig = [
+    { key: "revenue" as const, label: t("kpi.revenue"), icon: DollarSign, colorClass: "text-chart-income" },
+    { key: "expenses" as const, label: t("kpi.expenses"), icon: TrendingDown, colorClass: "text-chart-expense" },
+    { key: "travel" as const, label: t("kpi.travel"), icon: Plane, colorClass: "text-chart-travel" },
+    { key: "balance" as const, label: t("kpi.balance"), icon: Wallet, colorClass: "text-chart-balance" },
+  ];
   const values = { revenue, expenses, travel, balance };
 
   return (

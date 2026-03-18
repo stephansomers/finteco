@@ -2,6 +2,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/lib/types";
 import { formatCurrency } from "@/lib/csv-utils";
+import { useI18n } from "@/lib/i18n";
 
 const COLORS = [
   "hsl(210, 100%, 52%)", "hsl(160, 84%, 39%)", "hsl(0, 72%, 51%)",
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export function ExpenseDonutChart({ transactions }: Props) {
+  const { t } = useI18n();
   const expenses = transactions.filter(t => t.type === "expense");
   const grouped = expenses.reduce<Record<string, number>>((acc, t) => {
     acc[t.category] = (acc[t.category] || 0) + t.value;
@@ -27,15 +29,15 @@ export function ExpenseDonutChart({ transactions }: Props) {
   if (!data.length) {
     return (
       <Card className="border-border/50 bg-card">
-        <CardHeader><CardTitle className="text-sm font-medium">Expenses by Category</CardTitle></CardHeader>
-        <CardContent className="flex h-[250px] items-center justify-center text-muted-foreground">No data</CardContent>
+        <CardHeader><CardTitle className="text-sm font-medium">{t("expense.byCategory")}</CardTitle></CardHeader>
+        <CardContent className="flex h-[250px] items-center justify-center text-muted-foreground">{t("chart.noData")}</CardContent>
       </Card>
     );
   }
 
   return (
     <Card className="border-border/50 bg-card">
-      <CardHeader><CardTitle className="text-sm font-medium">Expenses by Category</CardTitle></CardHeader>
+      <CardHeader><CardTitle className="text-sm font-medium">{t("expense.byCategory")}</CardTitle></CardHeader>
       <CardContent>
         <div className="h-[250px]">
           <ResponsiveContainer width="100%" height="100%">
