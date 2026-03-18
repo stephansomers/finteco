@@ -11,7 +11,6 @@ export interface ExcelImportResult {
 /** Convert date value (dd/mm/yyyy string or Excel serial number) to yyyy-mm-dd */
 function parseDateValue(raw: unknown): string {
   if (typeof raw === "number") {
-    // Excel serial number → JS Date
     const d = new Date(Math.round((raw - 25569) * 86400000));
     const yyyy = d.getUTCFullYear();
     const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
@@ -19,7 +18,6 @@ function parseDateValue(raw: unknown): string {
     return `${yyyy}-${mm}-${dd}`;
   }
   const s = String(raw || "").trim();
-  // dd/mm/yyyy
   const match = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (match) {
     const [, dd, mm, yyyy] = match;
@@ -37,7 +35,6 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
   try {
     const workbook = XLSX.read(data, { type: "array" });
 
-    // Parse Transactions sheet
     const txSheet = workbook.Sheets["Transactions"];
     if (txSheet) {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(txSheet);
@@ -55,7 +52,6 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       errors.push("Sheet 'Transactions' not found.");
     }
 
-    // Parse Dividends sheet
     const divSheet = workbook.Sheets["Dividends"];
     if (divSheet) {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(divSheet);
@@ -71,7 +67,6 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
       errors.push("Sheet 'Dividends' not found.");
     }
 
-    // Parse Assets sheet
     const assetSheet = workbook.Sheets["Assets"];
     if (assetSheet) {
       const rows = XLSX.utils.sheet_to_json<Record<string, string>>(assetSheet);
@@ -95,34 +90,44 @@ export function parseExcelFile(data: ArrayBuffer): ExcelImportResult {
 export function downloadExcelTemplate() {
   const wb = XLSX.utils.book_new();
 
-  // Helper: convert Date to Excel serial number
   function toExcelDate(d: Date): number {
     const epoch = new Date(1899, 11, 30);
     return Math.round((d.getTime() - epoch.getTime()) / 86400000);
   }
 
-  // Transactions sheet
+  // Transactions sheet — examples of each income type + loan + repayment
   const txHeaders = ["date", "description", "category", "subcategory", "type", "value"];
   const txRows = [
-    [toExcelDate(new Date(2025, 0, 15)), "Salary", "Income", "Salary", "income", 5000],
-    [toExcelDate(new Date(2025, 0, 16)), "Grocery Store", "Food", "Groceries", "expense", 120],
-    [toExcelDate(new Date(2025, 0, 17)), "Flight to NYC", "Travel", "Flights", "expense", 350],
+    // Income examples
+    [toExcelDate(new Date(2025, 0, 5)),  "Monthly Salary",           "Income",          "Salary",      "income",  12000],
+    [toExcelDate(new Date(2025, 0, 8)),  "Website redesign project", "Income",          "Freelance",   "income",  3500],
+    [toExcelDate(new Date(2025, 0, 15)), "Stock dividends",          "Income",          "Investments", "income",  1160],
+    [toExcelDate(new Date(2025, 0, 20)), "Apartment rental income",  "Income",          "Rental",      "income",  2500],
+    [toExcelDate(new Date(2025, 11, 15)),"Year-end bonus",           "Income",          "Bonus",       "income",  15000],
+    // Expense examples
+    [toExcelDate(new Date(2025, 0, 10)), "Rent",                     "Housing",         "Rent",        "expense", 2800],
+    [toExcelDate(new Date(2025, 0, 12)), "Grocery Store",            "Food",            "Groceries",   "expense", 650],
+    [toExcelDate(new Date(2025, 0, 14)), "Restaurant",               "Food",            "Dining Out",  "expense", 280],
+    [toExcelDate(new Date(2025, 0, 18)), "Flight to Salvador",       "Travel",          "Flights",     "expense", 890],
+    [toExcelDate(new Date(2025, 0, 20)), "Hotel Salvador",           "Travel",          "Hotels",      "expense", 1200],
+    // Loan examples
+    [toExcelDate(new Date(2025, 0, 25)), "Loan to Gabriel",          "Loan",            "Loan Out",    "expense", 2000],
+    [toExcelDate(new Date(2025, 1, 18)), "Repayment from Gabriel",   "Loan Repayment",  "Repayment",   "income",  500],
   ];
   const txSheet = XLSX.utils.aoa_to_sheet([txHeaders, ...txRows]);
-  // Format date column as dd/mm/yyyy
   for (let r = 1; r <= txRows.length; r++) {
     const cell = txSheet[XLSX.utils.encode_cell({ r, c: 0 })];
     if (cell) { cell.t = "n"; cell.z = "dd/mm/yyyy"; }
   }
-  txSheet["!cols"] = [{ wch: 12 }, { wch: 20 }, { wch: 14 }, { wch: 14 }, { wch: 10 }, { wch: 10 }];
+  txSheet["!cols"] = [{ wch: 12 }, { wch: 28 }, { wch: 16 }, { wch: 14 }, { wch: 10 }, { wch: 10 }];
   XLSX.utils.book_append_sheet(wb, txSheet, "Transactions");
 
   // Dividends sheet
   const divHeaders = ["date", "asset", "category", "value"];
   const divRows = [
-    [toExcelDate(new Date(2025, 0, 15)), "PETR4", "Stocks", 320],
-    [toExcelDate(new Date(2025, 1, 20)), "XPML11", "FIIs", 180],
-    [toExcelDate(new Date(2025, 2, 15)), "VALE3", "Stocks", 450],
+    [toExcelDate(new Date(2025, 0, 15)), "PETR4",  "Stocks", 320],
+    [toExcelDate(new Date(2025, 1, 20)), "XPML11", "FIIs",   180],
+    [toExcelDate(new Date(2025, 2, 15)), "VALE3",  "Stocks", 450],
   ];
   const divSheet = XLSX.utils.aoa_to_sheet([divHeaders, ...divRows]);
   for (let r = 1; r <= divRows.length; r++) {
@@ -132,12 +137,12 @@ export function downloadExcelTemplate() {
   divSheet["!cols"] = [{ wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 10 }];
   XLSX.utils.book_append_sheet(wb, divSheet, "Dividends");
 
-  // Assets sheet — date uses last day of the month
+  // Assets sheet — last day of month
   const assetHeaders = ["date", "institution", "value"];
   const assetRows = [
-    [toExcelDate(new Date(2025, 1, 0)), "Bank A", 15000],   // 31/01/2025
-    [toExcelDate(new Date(2025, 2, 0)), "Bank A", 15500],   // 28/02/2025
-    [toExcelDate(new Date(2025, 1, 0)), "Broker B", 25000], // 31/01/2025
+    [toExcelDate(new Date(2025, 1, 0)), "Bank A",   15000],   // 31/01/2025
+    [toExcelDate(new Date(2025, 2, 0)), "Bank A",   15500],   // 28/02/2025
+    [toExcelDate(new Date(2025, 1, 0)), "Broker B", 25000],   // 31/01/2025
   ];
   const assetSheet = XLSX.utils.aoa_to_sheet([assetHeaders, ...assetRows]);
   for (let r = 1; r <= assetRows.length; r++) {
