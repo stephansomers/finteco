@@ -2,9 +2,20 @@ import { RefObject } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  BarChart3, DollarSign, CreditCard, CalendarDays, TrendingUp,
-  FileSpreadsheet, Upload, Download, ArrowRight, Eye, PieChart,
-  Layers, ShieldCheck, Table2,
+  BarChart3,
+  DollarSign,
+  CreditCard,
+  CalendarDays,
+  TrendingUp,
+  FileSpreadsheet,
+  Upload,
+  Download,
+  ArrowRight,
+  Eye,
+  PieChart,
+  Layers,
+  ShieldCheck,
+  Table2,
 } from "lucide-react";
 import { downloadExcelTemplate } from "@/lib/excel-utils";
 import { useI18n } from "@/lib/i18n";
@@ -67,8 +78,7 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
     <div className="space-y-10">
       <div className="text-center space-y-2 py-6">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          {t("tutorial.heading")}{" "}
-          <span className="text-primary">{t("tutorial.headingHighlight")}</span>
+          {t("tutorial.heading")} <span className="text-primary">{t("tutorial.headingHighlight")}</span>
         </h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{t("tutorial.subtitle")}</p>
       </div>
@@ -81,10 +91,8 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
           <div className="space-y-1">
             <h3 className="font-semibold text-base">{t("tutorial.privacyTitle")}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {t("tutorial.privacyDesc1")}{" "}
-              <strong className="text-foreground">{t("tutorial.privacyLocal")}</strong>
-              {t("tutorial.privacyDesc2")}{" "}
-              <strong className="text-foreground">{t("tutorial.privacyNever")}</strong>
+              {t("tutorial.privacyDesc1")} <strong className="text-foreground">{t("tutorial.privacyLocal")}</strong>
+              {t("tutorial.privacyDesc2")} <strong className="text-foreground">{t("tutorial.privacyNever")}</strong>
               {t("tutorial.privacyDesc3")}
             </p>
           </div>
@@ -120,7 +128,9 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
         <div className="grid gap-4 sm:grid-cols-3">
           {steps.map((step) => (
             <Card key={step.number} className="border-border/50 bg-card relative overflow-hidden">
-              <div className="absolute top-3 right-4 text-5xl font-black text-primary/10 leading-none select-none">{step.number}</div>
+              <div className="absolute top-3 right-4 text-5xl font-black text-primary/10 leading-none select-none">
+                {step.number}
+              </div>
               <CardContent className="p-6 space-y-2">
                 <h4 className="font-semibold text-base">{step.title}</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
@@ -164,14 +174,16 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
               <strong className="text-foreground">{t("tutorial.templateDesc4")}</strong>
               {t("tutorial.templateDesc5")}
             </p>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2">
               {sheetSpecs.map((spec) => (
                 <Card key={spec.name} className="border-border/30 bg-secondary/50">
                   <CardContent className="p-4 space-y-2">
                     <h4 className="font-semibold text-sm text-primary">{spec.name}</h4>
                     <div className="flex flex-wrap gap-1.5">
                       {spec.columns.map((col) => (
-                        <span key={col} className="rounded bg-primary/10 px-2 py-0.5 text-xs font-mono text-primary">{col}</span>
+                        <span key={col} className="rounded bg-primary/10 px-2 py-0.5 text-xs font-mono text-primary">
+                          {col}
+                        </span>
                       ))}
                     </div>
                     <p className="text-[11px] text-muted-foreground font-mono break-all">{spec.example}</p>
@@ -192,7 +204,12 @@ export function TutorialTab({ onNavigate, excelFileRef, onExcelUpload }: Props) 
             <p className="text-muted-foreground text-sm leading-relaxed">{t("tutorial.importDesc")}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <input ref={excelFileRef} type="file" accept=".xlsx,.xls" className="hidden" onChange={onExcelUpload} />
-              <Button onClick={downloadExcelTemplate} variant="outline" size="lg" className="border-border/50 w-full sm:w-auto">
+              <Button
+                onClick={downloadExcelTemplate}
+                variant="outline"
+                size="lg"
+                className="border-border/50 w-full sm:w-auto"
+              >
                 <Download className="mr-2 h-4 w-4" /> {t("tutorial.downloadTemplate")}
               </Button>
               <Button onClick={() => excelFileRef.current?.click()} size="lg" className="w-full sm:w-auto">
