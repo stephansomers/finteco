@@ -18,8 +18,8 @@ interface Props {
 const sheetSpecs = [
   {
     name: "Transactions",
-    columns: ["date", "description", "category", "subcategory", "type", "value"],
-    example: "15/01/2025 | Salary | Income | Salary | income | 5000",
+    columns: ["date", "description", "category", "subcategory", "value"],
+    example: "15/01/2025 | Salary | Income | Salary | 5000",
   },
   {
     name: "Dividends",
@@ -30,6 +30,11 @@ const sheetSpecs = [
     name: "Assets",
     columns: ["date", "institution", "value"],
     example: "31/01/2025 | Bank A | 15000",
+  },
+  {
+    name: "Key People",
+    columns: ["name"],
+    example: "Gabriel",
   },
 ];
 

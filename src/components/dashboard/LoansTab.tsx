@@ -12,35 +12,36 @@ import { useI18n } from "@/lib/i18n";
 interface Props {
   transactions: Transaction[];
   year: number;
+  keyPeople?: string[];
 }
 
-const KNOWN_NAMES = ["Gabriel", "Mariana", "Rafael", "Fernanda", "Others"];
-
-function extractPerson(description: string): string {
+function extractPerson(description: string, knownNames: string[]): string {
   const desc = description.toLowerCase();
-  for (const name of KNOWN_NAMES) {
+  for (const name of knownNames) {
     if (desc.includes(name.toLowerCase())) return name;
   }
   return "Others";
 }
 
+const LOAN_KEYWORDS = ["loan", "lend", "repay", "empréstimo", "emprestimo", "pagamento"];
+
 function isLoanTx(t: Transaction) {
-  return (
-    t.category.toLowerCase().includes("loan") ||
-    t.category.toLowerCase().includes("lend") ||
-    t.category.toLowerCase().includes("repay") ||
-    t.subcategory.toLowerCase().includes("loan") ||
-    t.subcategory.toLowerCase().includes("lend") ||
-    t.subcategory.toLowerCase().includes("repay")
-  );
+  const cat = t.category.toLowerCase();
+  const sub = t.subcategory.toLowerCase();
+  return LOAN_KEYWORDS.some(k => cat.includes(k) || sub.includes(k));
 }
 
-export function LoansTab({ transactions, year }: Props) {
+export function LoansTab({ transactions, year, keyPeople = [] }: Props) {
   const { t, tMonth } = useI18n();
   const [loanYear, setLoanYear] = useState<string>(year.toString());
   const [sortField, setSortField] = useState<"date" | "description" | "category" | "value">("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [txTableOpen, setTxTableOpen] = useState(true);
+
+  const knownNames = useMemo(() => {
+    if (keyPeople.length > 0) return [...keyPeople, "Others"];
+    return ["Gabriel", "Mariana", "Rafael", "Fernanda", "Others"];
+  }, [keyPeople]);
 
   const allLoanTx = useMemo(() => transactions.filter(isLoanTx), [transactions]);
 
@@ -55,7 +56,7 @@ export function LoansTab({ transactions, year }: Props) {
   }, [allLoanTx, loanYear]);
 
   const isRepayment = (t: Transaction) =>
-    t.type === "income" || t.category.toLowerCase().includes("repay") || t.subcategory.toLowerCase().includes("repay");
+    t.type === "income" || t.category.toLowerCase().includes("repay") || t.subcategory.toLowerCase().includes("repay") || t.category.toLowerCase().includes("pagamento") || t.subcategory.toLowerCase().includes("pagamento");
 
   const totalLent = loanTx.filter(t => !isRepayment(t)).reduce((s, t) => s + t.value, 0);
   const totalRepaid = loanTx.filter(t => isRepayment(t)).reduce((s, t) => s + t.value, 0);
@@ -69,7 +70,7 @@ export function LoansTab({ transactions, year }: Props) {
   const personData = useMemo(() => {
     const map: Record<string, { lent: number; repaid: number }> = {};
     loanTx.forEach(t => {
-      const person = extractPerson(t.description);
+      const person = extractPerson(t.description, knownNames);
       if (!map[person]) map[person] = { lent: 0, repaid: 0 };
       if (isRepayment(t)) map[person].repaid += t.value;
       else map[person].lent += t.value;
@@ -81,7 +82,7 @@ export function LoansTab({ transactions, year }: Props) {
         if (b.name === "Others") return -1;
         return a.name.localeCompare(b.name);
       });
-  }, [loanTx]);
+  }, [loanTx, knownNames]);
 
   const toggleSort = (field: typeof sortField) => {
     if (sortField === field) setSortDir(d => d === "asc" ? "desc" : "asc");
@@ -150,7 +151,7 @@ export function LoansTab({ transactions, year }: Props) {
             </TableHeader>
             <TableBody>
               {categories.map(cat => {
-                const isRepay = cat.toLowerCase().includes("repay");
+                const isRepay = cat.toLowerCase().includes("repay") || cat.toLowerCase().includes("pagamento");
                 const yearTotal = Array.from({ length: 12 }, (_, i) => getMonthlyValue(cat, i)).reduce((a, b) => a + b, 0);
                 return (
                   <TableRow key={cat} className="border-border/50">

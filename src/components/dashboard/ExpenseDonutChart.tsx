@@ -18,7 +18,8 @@ export function ExpenseDonutChart({ transactions }: Props) {
   const { t } = useI18n();
   const expenses = transactions.filter(t => t.type === "expense");
   const grouped = expenses.reduce<Record<string, number>>((acc, t) => {
-    acc[t.category] = (acc[t.category] || 0) + t.value;
+    const key = t.subcategory || t.category;
+    acc[key] = (acc[key] || 0) + t.value;
     return acc;
   }, {});
 

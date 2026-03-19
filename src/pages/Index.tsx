@@ -26,6 +26,7 @@ const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>(MOCK_ASSETS);
   const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
+  const [keyPeople, setKeyPeople] = useState<string[]>([]);
   const [txYear, setTxYear] = useState(currentYear.toString());
   const [wealthYear, setWealthYear] = useState("all");
   const [activeTab, setActiveTab] = useState("tutorial");
@@ -49,7 +50,7 @@ const Index = () => {
 
   const revenue = yearTx.filter(t => t.type === "income").reduce((s, t) => s + t.value, 0);
   const expenses = yearTx.filter(t => t.type === "expense").reduce((s, t) => s + t.value, 0);
-  const travel = yearTx.filter(t => t.type === "expense" && t.category.toLowerCase() === "travel").reduce((s, t) => s + t.value, 0);
+  const travel = yearTx.filter(t => t.type === "expense" && (t.category.toLowerCase() === "travel" || t.category.toLowerCase() === "viagem")).reduce((s, t) => s + t.value, 0);
   const balance = revenue - expenses;
 
   const filteredAssets = useMemo(() => {
@@ -79,6 +80,9 @@ const Index = () => {
         if (result.assets.length > 0) {
           setAssets(result.assets);
           loaded.push(`${result.assets.length} ${t("toast.assets")}`);
+        }
+        if (result.keyPeople.length > 0) {
+          setKeyPeople(result.keyPeople);
         }
 
         if (loaded.length > 0) {
@@ -169,7 +173,7 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="loans" className="mt-6 space-y-6">
-            <LoansTab transactions={transactions} year={currentYear} />
+            <LoansTab transactions={transactions} year={currentYear} keyPeople={keyPeople} />
           </TabsContent>
 
           <TabsContent value="dividends" className="mt-6 space-y-6">
