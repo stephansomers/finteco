@@ -85,47 +85,92 @@ const translations = {
   // Tutorial Tab
   "tutorial.heading": { en: "How to Use the", pt: "Como Usar o" },
   "tutorial.headingHighlight": { en: "Financial Dashboard", pt: "Dashboard Financeiro" },
-  "tutorial.subtitle": { en: "A quick guide to organizing your finances", pt: "Um guia rápido para organizar suas finanças" },
+  "tutorial.subtitle": {
+    en: "A quick guide to organizing your finances",
+    pt: "Um guia rápido para organizar suas finanças",
+  },
   "tutorial.privacyTitle": { en: "Your data stays with you", pt: "Seus dados ficam com você" },
   "tutorial.privacyDesc1": { en: "All data processing happens", pt: "Todo o processamento de dados acontece" },
   "tutorial.privacyLocal": { en: "locally in your browser", pt: "localmente no seu navegador" },
   "tutorial.privacyDesc2": { en: ". Your financial information is", pt: ". Suas informações financeiras" },
   "tutorial.privacyNever": { en: "never sent to any server", pt: "nunca são enviadas a nenhum servidor" },
-  "tutorial.privacyDesc3": { en: ". Nothing is stored remotely - when you close the tab, the data is gone. Full privacy, zero risk.", pt: ". Nada é armazenado remotamente - ao fechar a aba, os dados são apagados. Privacidade total, risco zero." },
+  "tutorial.privacyDesc3": {
+    en: ". Nothing is stored remotely - when you close the tab, the data is gone. Full privacy, zero risk.",
+    pt: ". Nada é armazenado remotamente - ao fechar a aba, os dados são apagados. Privacidade total, risco zero.",
+  },
   "tutorial.overviewTitle": { en: "Overview", pt: "Visão Geral" },
-  "tutorial.overviewDesc": { en: "This system gives you full control over your personal finances. With it, you can:", pt: "Este sistema dá controle total sobre suas finanças pessoais. Com ele, você pode:" },
+  "tutorial.overviewDesc": {
+    en: "This system gives you full control over your personal finances. With it, you can:",
+    pt: "Este sistema dá controle total sobre suas finanças pessoais. Com ele, você pode:",
+  },
   "tutorial.overviewItem1": { en: "Track income and expenses", pt: "Acompanhar receitas e despesas" },
-  "tutorial.overviewItem2": { en: "View monthly consolidated reports", pt: "Visualizar relatórios mensais consolidados" },
+  "tutorial.overviewItem2": {
+    en: "View monthly consolidated reports",
+    pt: "Visualizar relatórios mensais consolidados",
+  },
   "tutorial.overviewItem3": { en: "Analyze financial progress", pt: "Analisar progresso financeiro" },
   "tutorial.overviewItem4": { en: "Monitor dividends and wealth", pt: "Monitorar dividendos e patrimônio" },
   "tutorial.stepsTitle": { en: "Step by Step", pt: "Passo a Passo" },
   "tutorial.step1Title": { en: "Download the template", pt: "Baixe o template" },
-  "tutorial.step1Desc": { en: "Download the Excel template (.xlsx) which contains 3 sheets: Transactions, Dividends, and Assets.", pt: "Baixe o template Excel (.xlsx) que contém 3 abas: Transactions, Dividends e Assets." },
+  "tutorial.step1Desc": {
+    en: "Download the Excel template (.xlsx) which contains 3 sheets: Transactions, Dividends, and Assets.",
+    pt: "Baixe o template Excel (.xlsx) que contém 3 abas: Transactions, Dividends e Assets.",
+  },
   "tutorial.step2Title": { en: "Fill in your data", pt: "Preencha seus dados" },
-  "tutorial.step2Desc": { en: "Open the file in Excel or Google Sheets. Fill each sheet with your financial data following the column headers.", pt: "Abra o arquivo no Excel ou Google Sheets. Preencha cada aba com seus dados financeiros seguindo os cabeçalhos das colunas." },
+  "tutorial.step2Desc": {
+    en: "Open the file in Excel or Google Sheets. Fill each sheet with your financial data following the column headers.",
+    pt: "Abra o arquivo no Excel ou Google Sheets. Preencha cada aba com seus dados financeiros seguindo os cabeçalhos das colunas.",
+  },
   "tutorial.step3Title": { en: "Upload & analyze", pt: "Faça upload e analise" },
-  "tutorial.step3Desc": { en: "Upload the filled Excel file below. The dashboard will instantly show your KPIs, charts, and consolidated reports.", pt: "Faça upload do arquivo Excel preenchido abaixo. O dashboard mostrará instantaneamente seus KPIs, gráficos e relatórios consolidados." },
+  "tutorial.step3Desc": {
+    en: "Upload the filled Excel file below. The dashboard will instantly show your KPIs, charts, and consolidated reports.",
+    pt: "Faça upload do arquivo Excel preenchido abaixo. O dashboard mostrará instantaneamente seus KPIs, gráficos e relatórios consolidados.",
+  },
   "tutorial.featuresTitle": { en: "System Features", pt: "Funcionalidades do Sistema" },
   "tutorial.feat.dashboard": { en: "Dashboard", pt: "Dashboard" },
-  "tutorial.feat.dashboardDesc": { en: "Monthly financial summary with KPIs and interactive charts.", pt: "Resumo financeiro mensal com KPIs e gráficos interativos." },
+  "tutorial.feat.dashboardDesc": {
+    en: "Monthly financial summary with KPIs and interactive charts.",
+    pt: "Resumo financeiro mensal com KPIs e gráficos interativos.",
+  },
   "tutorial.feat.income": { en: "Income", pt: "Receitas" },
-  "tutorial.feat.incomeDesc": { en: "Track all your money inflows.", pt: "Acompanhe todas as suas entradas de dinheiro." },
+  "tutorial.feat.incomeDesc": {
+    en: "Track all your money inflows.",
+    pt: "Acompanhe todas as suas entradas de dinheiro.",
+  },
   "tutorial.feat.expenses": { en: "Expenses", pt: "Despesas" },
-  "tutorial.feat.expensesDesc": { en: "Detailed spending control by category.", pt: "Controle detalhado de gastos por categoria." },
+  "tutorial.feat.expensesDesc": {
+    en: "Detailed spending control by category.",
+    pt: "Controle detalhado de gastos por categoria.",
+  },
   "tutorial.feat.yearFilter": { en: "Year Filter", pt: "Filtro por Ano" },
-  "tutorial.feat.yearFilterDesc": { en: "Navigate between periods and compare years.", pt: "Navegue entre períodos e compare anos." },
+  "tutorial.feat.yearFilterDesc": {
+    en: "Navigate between periods and compare years.",
+    pt: "Navegue entre períodos e compare anos.",
+  },
   "tutorial.feat.consolidated": { en: "Consolidated", pt: "Consolidado" },
-  "tutorial.feat.consolidatedDesc": { en: "Income and expense analysis by category.", pt: "Análise de receitas e despesas por categoria." },
+  "tutorial.feat.consolidatedDesc": {
+    en: "Income and expense analysis by category.",
+    pt: "Análise de receitas e despesas por categoria.",
+  },
   "tutorial.feat.import": { en: "Import / Export", pt: "Importar / Exportar" },
-  "tutorial.feat.importDesc": { en: "Use a single Excel template to feed the system.", pt: "Use um único template Excel para alimentar o sistema." },
+  "tutorial.feat.importDesc": {
+    en: "Use a single Excel template to feed the system.",
+    pt: "Use um único template Excel para alimentar o sistema.",
+  },
   "tutorial.templateTitle": { en: "Excel Template Structure", pt: "Estrutura do Template Excel" },
   "tutorial.templateDesc1": { en: "The template is a single", pt: "O template é um único arquivo" },
   "tutorial.templateDesc2": { en: ".xlsx file", pt: ".xlsx" },
   "tutorial.templateDesc3": { en: " with", pt: " com" },
-  "tutorial.templateDesc4": { en: " 3 sheets", pt: " 3 abas" },
-  "tutorial.templateDesc5": { en: ". Each sheet has specific columns that must be kept as headers in the first row:", pt: ". Cada aba possui colunas específicas que devem ser mantidas como cabeçalhos na primeira linha:" },
+  "tutorial.templateDesc4": { en: " 4 sheets", pt: " 4 abas" },
+  "tutorial.templateDesc5": {
+    en: ". Each sheet has specific columns that must be kept as headers in the first row:",
+    pt: ". Cada aba possui colunas específicas que devem ser mantidas como cabeçalhos na primeira linha:",
+  },
   "tutorial.importTitle": { en: "Import Data", pt: "Importar Dados" },
-  "tutorial.importDesc": { en: "Download the Excel template, fill it with your financial data across the 3 sheets, then upload it here. All data is processed locally in your browser.", pt: "Baixe o template Excel, preencha com seus dados financeiros nas 3 abas e faça upload aqui. Todos os dados são processados localmente no seu navegador." },
+  "tutorial.importDesc": {
+    en: "Download the Excel template, fill it with your financial data across the 3 sheets, then upload it here. All data is processed locally in your browser.",
+    pt: "Baixe o template Excel, preencha com seus dados financeiros nas 3 abas e faça upload aqui. Todos os dados são processados localmente no seu navegador.",
+  },
   "tutorial.downloadTemplate": { en: "Download Template", pt: "Baixar Template" },
   "tutorial.uploadFile": { en: "Upload Excel File", pt: "Enviar Arquivo Excel" },
   "tutorial.cta": { en: "Start using the system", pt: "Começar a usar o sistema" },
@@ -166,9 +211,15 @@ const translations = {
   "toast.assets": { en: "assets", pt: "ativos" },
   "toast.warnings": { en: "Import warnings", pt: "Avisos de importação" },
   "toast.noData": { en: "No data found", pt: "Nenhum dado encontrado" },
-  "toast.noDataDesc": { en: "The file was read but no valid rows were found. Please check the template format.", pt: "O arquivo foi lido mas nenhuma linha válida foi encontrada. Verifique o formato do template." },
+  "toast.noDataDesc": {
+    en: "The file was read but no valid rows were found. Please check the template format.",
+    pt: "O arquivo foi lido mas nenhuma linha válida foi encontrada. Verifique o formato do template.",
+  },
   "toast.invalidFile": { en: "Invalid file", pt: "Arquivo inválido" },
-  "toast.invalidFileDesc": { en: "Could not read the file. Please upload a valid .xlsx Excel file.", pt: "Não foi possível ler o arquivo. Envie um arquivo .xlsx válido." },
+  "toast.invalidFileDesc": {
+    en: "Could not read the file. Please upload a valid .xlsx Excel file.",
+    pt: "Não foi possível ler o arquivo. Envie um arquivo .xlsx válido.",
+  },
 } as const;
 
 type TranslationKey = keyof typeof translations;
@@ -200,11 +251,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     return translations[key]?.[lang] ?? "";
   };
 
-  return (
-    <I18nContext.Provider value={{ lang, setLang, t, tMonth, tMonthFull }}>
-      {children}
-    </I18nContext.Provider>
-  );
+  return <I18nContext.Provider value={{ lang, setLang, t, tMonth, tMonthFull }}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n() {
