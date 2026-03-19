@@ -26,6 +26,7 @@ const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS);
   const [assets, setAssets] = useState<AssetSnapshot[]>(MOCK_ASSETS);
   const [dividends, setDividends] = useState<DividendEntry[]>(MOCK_DIVIDENDS);
+  const [keyPeople, setKeyPeople] = useState<string[]>([]);
   const [txYear, setTxYear] = useState(currentYear.toString());
   const [wealthYear, setWealthYear] = useState("all");
   const [activeTab, setActiveTab] = useState("tutorial");
