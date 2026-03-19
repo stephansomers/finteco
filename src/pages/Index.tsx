@@ -81,6 +81,9 @@ const Index = () => {
           setAssets(result.assets);
           loaded.push(`${result.assets.length} ${t("toast.assets")}`);
         }
+        if (result.keyPeople.length > 0) {
+          setKeyPeople(result.keyPeople);
+        }
 
         if (loaded.length > 0) {
           toast.success(t("toast.success"), {
