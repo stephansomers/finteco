@@ -35,7 +35,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-03-09`, description: "Landing page project", category: "Income", subcategory: "Freelance", type: "income", value: 2800 },
   { date: `${currentYear}-03-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
   { date: `${currentYear}-03-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 580 },
-  { date: `${currentYear}-03-15`, description: "Flight to Rio", category: "Travel", subcategory: "Flights", type: "expense", value: 650 },
+  { date: `${currentYear}-03-15`, description: "Flight to Rio", category: "Travel", subcategory: "Travel", type: "expense", value: 650 },
   { date: `${currentYear}-03-18`, description: "Repayment from Mariana", category: "Loan Repayment", subcategory: "Repayment", type: "income", value: 750 },
   { date: `${currentYear}-03-20`, description: "Loan to Rafael", category: "Loan", subcategory: "Loan Out", type: "expense", value: 3000 },
   { date: `${currentYear}-03-22`, description: "Pharmacy", category: "Health", subcategory: "Pharmacy", type: "expense", value: 95 },
