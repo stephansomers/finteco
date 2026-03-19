@@ -117,7 +117,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-12-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
   { date: `${currentYear}-12-12`, description: "Christmas gifts", category: "Shopping", subcategory: "Gifts", type: "expense", value: 1500 },
   { date: `${currentYear}-12-15`, description: "Year-end bonus", category: "Income", subcategory: "Bonus", type: "income", value: 15000 },
-  { date: `${currentYear}-12-20`, description: "New Year's travel", category: "Travel", subcategory: "Hotels", type: "expense", value: 1800 },
+  { date: `${currentYear}-12-20`, description: "New Year's travel", category: "Travel", subcategory: "Travel", type: "expense", value: 1800 },
 ];
 
 export const MOCK_DIVIDENDS: DividendEntry[] = [
