@@ -9,8 +9,8 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-01-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
   { date: `${currentYear}-01-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 650 },
   { date: `${currentYear}-01-14`, description: "Restaurant", category: "Food", subcategory: "Dining Out", type: "expense", value: 280 },
-  { date: `${currentYear}-01-18`, description: "Flight to Salvador", category: "Travel", subcategory: "Flights", type: "expense", value: 890 },
-  { date: `${currentYear}-01-20`, description: "Hotel Salvador", category: "Travel", subcategory: "Hotels", type: "expense", value: 1200 },
+  { date: `${currentYear}-01-18`, description: "Flight to Salvador", category: "Travel", subcategory: "Travel", type: "expense", value: 890 },
+  { date: `${currentYear}-01-20`, description: "Hotel Salvador", category: "Travel", subcategory: "Travel", type: "expense", value: 1200 },
   { date: `${currentYear}-01-22`, description: "Uber rides", category: "Transport", subcategory: "Rideshare", type: "expense", value: 180 },
   { date: `${currentYear}-01-25`, description: "Loan to Gabriel", category: "Loan", subcategory: "Loan Out", type: "expense", value: 2000 },
   { date: `${currentYear}-01-28`, description: "Electricity bill", category: "Housing", subcategory: "Utilities", type: "expense", value: 320 },
@@ -35,7 +35,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-03-09`, description: "Landing page project", category: "Income", subcategory: "Freelance", type: "income", value: 2800 },
   { date: `${currentYear}-03-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
   { date: `${currentYear}-03-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 580 },
-  { date: `${currentYear}-03-15`, description: "Flight to Rio", category: "Travel", subcategory: "Flights", type: "expense", value: 650 },
+  { date: `${currentYear}-03-15`, description: "Flight to Rio", category: "Travel", subcategory: "Travel", type: "expense", value: 650 },
   { date: `${currentYear}-03-18`, description: "Repayment from Mariana", category: "Loan Repayment", subcategory: "Repayment", type: "income", value: 750 },
   { date: `${currentYear}-03-20`, description: "Loan to Rafael", category: "Loan", subcategory: "Loan Out", type: "expense", value: 3000 },
   { date: `${currentYear}-03-22`, description: "Pharmacy", category: "Health", subcategory: "Pharmacy", type: "expense", value: 95 },
@@ -59,7 +59,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-05-09`, description: "Tesouro Direto yield", category: "Income", subcategory: "Investments", type: "income", value: 1105 },
   { date: `${currentYear}-05-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
   { date: `${currentYear}-05-12`, description: "Supermarket", category: "Food", subcategory: "Groceries", type: "expense", value: 700 },
-  { date: `${currentYear}-05-15`, description: "Flight to SP", category: "Travel", subcategory: "Flights", type: "expense", value: 520 },
+  { date: `${currentYear}-05-15`, description: "Flight to SP", category: "Travel", subcategory: "Travel", type: "expense", value: 520 },
   { date: `${currentYear}-05-18`, description: "Loan to Fernanda", category: "Loan", subcategory: "Loan Out", type: "expense", value: 500 },
   { date: `${currentYear}-05-20`, description: "Repayment from Rafael", category: "Loan Repayment", subcategory: "Repayment", type: "income", value: 1500 },
   { date: `${currentYear}-05-22`, description: "Gym membership", category: "Health", subcategory: "Gym", type: "expense", value: 150 },
@@ -117,7 +117,7 @@ export const MOCK_TRANSACTIONS: Transaction[] = [
   { date: `${currentYear}-12-10`, description: "Rent", category: "Housing", subcategory: "Rent", type: "expense", value: 2800 },
   { date: `${currentYear}-12-12`, description: "Christmas gifts", category: "Shopping", subcategory: "Gifts", type: "expense", value: 1500 },
   { date: `${currentYear}-12-15`, description: "Year-end bonus", category: "Income", subcategory: "Bonus", type: "income", value: 15000 },
-  { date: `${currentYear}-12-20`, description: "New Year's travel", category: "Travel", subcategory: "Hotels", type: "expense", value: 1800 },
+  { date: `${currentYear}-12-20`, description: "New Year's travel", category: "Travel", subcategory: "Travel", type: "expense", value: 1800 },
 ];
 
 export const MOCK_DIVIDENDS: DividendEntry[] = [
