@@ -50,7 +50,7 @@ const Index = () => {
 
   const revenue = yearTx.filter(t => t.type === "income").reduce((s, t) => s + t.value, 0);
   const expenses = yearTx.filter(t => t.type === "expense").reduce((s, t) => s + t.value, 0);
-  const travel = yearTx.filter(t => t.type === "expense" && (t.category.toLowerCase() === "travel" || t.category.toLowerCase() === "viagem")).reduce((s, t) => s + t.value, 0);
+  const travel = yearTx.filter(t => t.type === "expense" && (t.subcategory.toLowerCase() === "travel" || t.subcategory.toLowerCase() === "viagem")).reduce((s, t) => s + t.value, 0);
   const balance = revenue - expenses;
 
   const filteredAssets = useMemo(() => {
